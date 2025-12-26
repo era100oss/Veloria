@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veloria</title>
+    <style>
+        :root {
+            --bg-primary: #0A0A0F;
+            --bg-secondary: #1A1A24;
+            --text-primary: #E0E0E0;
+            --text-secondary: #AAAAAA;
+            --accent-purple: #9D4EDD;
+            --accent-gold: #FFB347;
+            --border-color: #2D2D3D;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-primary); color: var(--text-primary); width: 100%; height: 100%; overflow: hidden; }
+        .container { display: flex; width: 100%; height: 100%; gap: 1px; background: var(--border-color); }
+        .panel-wishes { flex: 0 0 55%; background: var(--bg-primary); overflow-y: auto; overflow-x: hidden; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .panel-moments { flex: 0 0 45%; background: var(--bg-secondary); display: flex; flex-direction: column; margin: 8px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); min-height: 0; }
+        h1 { text-align: center; color: var(--accent-purple); font-size: 1.1rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
+        .accordion { border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-secondary); flex-shrink: 0; margin-bottom: 6px; }
+        .accordion-header { padding: 8px 10px; background: var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; user-select: none; }
+        .accordion-header:hover { background: #3D3D4D; }
+        .accordion-header.active { background: var(--accent-purple); color: white; }
+        .accordion-icon { transition: transform 0.3s; font-size: 0.75rem; }
+        .accordion-header.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .accordion-content.active { max-height: 2000px; padding: 10px; }
+        .control-group { margin-bottom: 8px; }
+        label { display: block; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 3px; font-weight: 500; }
+        select, input, textarea { width: 100%; padding: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; font-size: 0.8rem; font-family: inherit; }
+        select:focus, input:focus { outline: none; border-color: var(--accent-purple); }
+        input[type="checkbox"] { margin-right: 6px; transform: scale(1.1); }
+        .checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 0.8rem; }
+        .gallery { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+        .gallery-item { border-radius: 6px; overflow: hidden; border: 2px solid var(--border-color); cursor: pointer; background: var(--bg-primary); flex-shrink: 0; max-height: 200px; }
+        .gallery-item:hover { border-color: var(--accent-purple); }
+        .gallery-item img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .gallery-info { padding: 4px 6px; font-size: 0.65rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-generate { background: linear-gradient(135deg, var(--accent-gold), #CC5500); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
+        .btn-generate:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 179, 71, 0.3); }
+        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 15px; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-secondary); border-radius: 8px; padding: 15px; max-width: 90vw; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
+        .modal-image { width: 100%; border-radius: 6px; margin-bottom: 12px; }
+        .modal-info { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; word-break: break-word; }
+        .modal-buttons { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        button { padding: 8px 12px; background: var(--accent-purple); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        button:hover { background: #B565FF; }
+        .prompt-display { background: var(--bg-primary); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; font-size: 0.7rem; color: var(--text-secondary); min-height: 40px; max-height: 80px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; line-height: 1.2; }
+        textarea { resize: vertical; min-height: 80px; }
+        .section-title { color: var(--accent-purple); font-size: 0.8rem; margin-bottom: 6px; margin-top: 8px; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; }
+        @media (max-width: 1024px) { .container { flex-direction: column; } .panel-wishes { flex: 0 0 50%; } .panel-moments { flex: 0 0 50%; margin: 4px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel-wishes">
+            <h1>✨ VELORIA</h1>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>🎭 Режим</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <div class="control-group">
+                        <label>Режим:</label>
+                        <select id="scene-mode" onchange="updatePrompt()">
+                            <option value="primary">Основное действие</option>
+                            <option value="fetish">Фетиш</option>
+                            <option value="composite">Комбинированная</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fpv-checkbox" onchange="updateUIForFPV()">
+                            От первого лица (FPV)
+                        </label>
+                    </div>
+                    <div class="control-group" id="fpv-gender-group" style="display: none;">
+                        <label>Пол наблюдающего:</label>
+                        <select id="fpv-gender" onchange="updatePrompt()">
+                            <option value="">Не указывать</option>
+                            <option value="woman">Женщина</option>
+                            <option value="man">Мужчина</option>
+                            <option value="shemale">Шимейл</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>👥 Персонажи</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <div class="control-group">
+                        <label>Количество:</label>
+                        <select id="count-select" onchange="updateSecondCharacterVisibility()">
+                            <option value="solo">Один</option>
+                            <option value="couple">Пара</option>
+                        </select>
+                    </div>
+
+                    <div class="section-title">👤 Персонаж 1</div>
+                    <div class="control-group">
+                        <label>Пол:</label>
+                        <select id="gender-1" onchange="updateGenderDisplay(1)">
+                            <option value="">-- --</option>
+                            <option value="woman">Женщина</option>
+                            <option value="man">Мужчина</option>
+                            <option value="shemale">Шимейл</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Возраст:</label>
+                        <select id="age-1" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="18_21">18-21</option>
+                            <option value="21_27">21-27</option>
+                            <option value="27_35">27-35</option>
+                            <option value="35_42">35-42</option>
+                            <option value="42_plus">42+</option>
+                            <option value="young_adult">Молодой</option>
+                            <option value="experienced_mature">Зрелый</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Тело:</label>
+                        <select id="body-1" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="slim">Стройное</option>
+                            <option value="athletic">Атлетическое</option>
+                            <option value="curvy">Пышное</option>
+                            <option value="thick">Плотное</option>
+                            <option value="petite">Миниатюрное</option>
+                            <option value="voluptuous">Соблазнительное</option>
+                            <option value="muscular">Мускулистое</option>
+                            <option value="tall_lean">Высокое</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="breast-group-1">
+                        <label>Грудь:</label>
+                        <select id="breast-1" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="small">Маленькая</option>
+                            <option value="medium">Средняя</option>
+                            <option value="large">Большая</option>
+                            <option value="very_large">Очень большая</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="penis-group-1" style="display: none;">
+                        <label>Пенис:</label>
+                        <select id="penis-1" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="small">Маленький</option>
+                            <option value="average">Средний</option>
+                            <option value="large">Большой</option>
+                            <option value="very_large">Очень большой</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Кожа:</label>
+                        <select id="skin-1" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="smooth">Гладкая</option>
+                            <option value="natural">Естественная</option>
+                            <option value="pale">Бледная</option>
+                            <option value="tan">Загорелая</option>
+                            <option value="dark">Тёмная</option>
+                            <option value="freckles">С веснушками</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="passive-1" onchange="updatePrompt()">
+                            Пассивная роль
+                        </label>
+                    </div>
+
+                    <div id="second-char-section" style="display: none;">
+                        <div class="section-title">👥 Персонаж 2</div>
+                        <div class="control-group">
+                            <label>Пол:</label>
+                            <select id="gender-2" onchange="updateGenderDisplay(2)">
+                                <option value="">-- --</option>
+                                <option value="woman">Женщина</option>
+                                <option value="man">Мужчина</option>
+                                <option value="shemale">Шимейл</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Возраст:</label>
+                            <select id="age-2" onchange="updatePrompt()">
+                                <option value="">-- --</option>
+                                <option value="18_21">18-21</option>
+                                <option value="21_27">21-27</option>
+                                <option value="27_35">27-35</option>
+                                <option value="35_42">35-42</option>
+                                <option value="42_plus">42+</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Тело:</label>
+                            <select id="body-2" onchange="updatePrompt()">
+                                <option value="">-- --</option>
+                                <option value="slim">Стройное</option>
+                                <option value="athletic">Атлетическое</option>
+                                <option value="curvy">Пышное</option>
+                                <option value="thick">Плотное</option>
+                                <option value="petite">Миниатюрное</option>
+                                <option value="voluptuous">Соблазнительное</option>
+                                <option value="muscular">Мускулистое</option>
+                                <option value="tall_lean">Высокое</option>
+                            </select>
+                        </div>
+                        <div class="control-group" id="breast-group-2">
+                            <label>Грудь:</label>
+                            <select id="breast-2" onchange="updatePrompt()">
+                                <option value="">-- --</option>
+                                <option value="small">Маленькая</option>
+                                <option value="medium">Средняя</option>
+                                <option value="large">Большая</option>
+                                <option value="very_large">Очень большая</option>
+                            </select>
+                        </div>
+                        <div class="control-group" id="penis-group-2" style="display: none;">
+                            <label>Пенис:</label>
+                            <select id="penis-2" onchange="updatePrompt()">
+                                <option value="">-- --</option>
+                                <option value="small">Маленький</option>
+                                <option value="average">Средний</option>
+                                <option value="large">Большой</option>
+                                <option value="very_large">Очень большой</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Кожа:</label>
+                            <select id="skin-2" onchange="updatePrompt()">
+                                <option value="">-- --</option>
+                                <option value="smooth">Гладкая</option>
+                                <option value="natural">Естественная</option>
+                                <option value="pale">Бледная</option>
+                                <option value="tan">Загорелая</option>
+                                <option value="dark">Тёмная</option>
+                                <option value="freckles">С веснушками</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="passive-2" onchange="updatePrompt()">
+                                Пассивная роль
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>⚡ Действие</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <div class="control-group">
+                        <label>Действие:</label>
+                        <select id="action-select" onchange="updateActionUI()">
+                            <option value="">-- --</option>
+                            <option value="sucking_penis">Сосание члена</option>
+                            <option value="licking_pussy">Облизывание киски</option>
+                            <option value="deepthroat">Глубокий минет</option>
+                            <option value="vaginal">Вагинальное проникновение</option>
+                            <option value="anal">Анальное проникновение</option>
+                            <option value="fingering">Фингеринг</option>
+                            <option value="dildo">Дилдо</option>
+                            <option value="handjob">Рукоблудие</option>
+                            <option value="footjob">Футджоб</option>
+                            <option value="kissing">Страстные поцелуи</option>
+                            <option value="stripping">Медленный стриптиз</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="dildo-group" style="display: none;">
+                        <label>Дилдо в:</label>
+                        <select id="dildo-target" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="herself">Себе</option>
+                            <option value="partner">Партнёру</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Поза:</label>
+                        <select id="pose-select" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="kneeling">На коленях</option>
+                            <option value="lying_back">Лёжа на спине</option>
+                            <option value="lying_stomach">Лёжа на животе</option>
+                            <option value="sitting_lap">На коленях (сидя)</option>
+                            <option value="standing">Стоя</option>
+                            <option value="missionary">Миссионерская</option>
+                            <option value="doggy">Собачка</option>
+                            <option value="cowgirl">Наездница</option>
+                            <option value="reverse_cowgirl">Обратная наездница</option>
+                            <option value="spooning">Ложки</option>
+                            <option value="bent_over">Наклонившись</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Окружение:</label>
+                        <select id="environment-select" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="bedroom">Спальня</option>
+                            <option value="bathroom">Ванная</option>
+                            <option value="living_room">Гостиная</option>
+                            <option value="office">Офис</option>
+                            <option value="hotel_room">Отель</option>
+                            <option value="kitchen">Кухня</option>
+                            <option value="outdoor">На улице</option>
+                            <option value="beach">Пляж</option>
+                            <option value="pool">Бассейн</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>🎨 Стиль</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div class="control-group">
+                        <label>Освещение:</label>
+                        <select id="lighting-select" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="soft">Мягкое</option>
+                            <option value="dim">Тусклое</option>
+                            <option value="natural">Естественное</option>
+                            <option value="dramatic">Драматичное</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Атмосфера:</label>
+                        <select id="atmosphere-select" onchange="updatePrompt()">
+                            <option value="">-- --</option>
+                            <option value="intimate">Интимная</option>
+                            <option value="sensual">Чувственная</option>
+                            <option value="playful">Игривая</option>
+                            <option value="passionate">Страстная</option>
+                            <option value="romantic">Романтическая</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Стиль:</label>
+                        <select id="style-select" onchange="updatePrompt()">
+                            <option value="photorealistic">Фотореалистичный</option>
+                            <option value="realistic">Реалистичный</option>
+                            <option value="artistic">Художественный</option>
+                            <option value="cinematic">Кинематографичный</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>⚙️ Техническое</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div class="control-group">
+                        <label>Разрешение:</label>
+                        <select id="resolution-select">
+                            <option value="512x512">512×512</option>
+                            <option value="512x768">512×768</option>
+                            <option value="768x512">768×512</option>
+                            <option value="768x768">768×768</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Seed:</label>
+                        <input type="text" id="seed-input" placeholder="случайный">
+                    </div>
+                    <div class="control-group">
+                        <label>Количество:</label>
+                        <select id="batch-count">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="advanced-mode-toggle" onchange="toggleAdvancedMode()">
+                            Advanced Mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>📝 Промт</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div id="prompt-preview" class="prompt-display">Промт...</div>
+                    <div id="advanced-mode-area" style="display: none; margin-top: 8px;">
+                        <textarea id="prompt-textarea"></textarea>
+                        <button onclick="resetPrompt()" style="width: 100%; margin-top: 6px;">Сбросить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-moments">
+            <div class="gallery" id="gallery">
+                <div style="text-align: center; color: var(--text-secondary); padding: 30px 15px; font-size: 0.8rem;">Готовы создавать...</div>
+            </div>
+            <button class="btn-generate" id="generate-btn" onclick="generateImageButton()">ECSTASY</button>
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <img id="modal-image" class="modal-image" src="" alt="">
+            <div class="modal-info">
+                <h4 style="color: var(--accent-purple); margin-bottom: 8px;">Промт:</h4>
+                <div id="modal-prompt" style="margin-bottom: 12px;"></div>
+                <h4 style="color: var(--accent-purple); margin-bottom: 8px;">Инфо:</h4>
+                <div id="modal-settings"></div>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="closeModal()">Закрыть</button>
+                <button onclick="copyPromptToClipboard()">Копировать</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stylesSuffixes = {
+            photorealistic: "Professional photography, aesthetic, masterpiece, highly detailed, photorealistic, 8k resolution, realistic anatomy, sharp focus",
+            realistic: "Realistic style, well-defined, professional, detailed, 4k resolution, high quality",
+            artistic: "Artistic style, beautifully painted, expressive, detailed brushwork, gallery quality",
+            cinematic: "Cinematic lighting, movie quality, dramatic composition, professional color grading, award-winning"
+        };
+
+        const negativePrompt = "bad anatomy, deformed, mutated hands, extra digits, missing digits, distorted, low quality, blurry, cartoon, illustration";
+
+        const compatibilityMatrix = {
+            'sucking_penis': ['kneeling', 'lying_back', 'sitting_lap', 'standing'],
+            'licking_pussy': ['kneeling', 'lying_back', 'sitting_lap', 'standing'],
+            'deepthroat': ['kneeling', 'sitting_lap', 'standing'],
+            'vaginal': ['missionary', 'doggy', 'cowgirl', 'reverse_cowgirl', 'spooning', 'bent_over'],
+            'anal': ['doggy', 'missionary', 'bent_over', 'cowgirl'],
+            'fingering': ['lying_back', 'kneeling', 'sitting_lap'],
+            'dildo': ['lying_back', 'sitting_lap', 'standing', 'doggy'],
+            'handjob': ['sitting_lap', 'standing', 'lying_back'],
+            'footjob': ['lying_back', 'standing'],
+            'kissing': ['standing', 'sitting_lap', 'lying_back', 'missionary', 'spooning'],
+            'stripping': ['standing', 'sitting_lap']
+        };
+
+        let isGenerating = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupAccordions();
+            updateGenderDisplay(1);
+            updateGenderDisplay(2);
+            updatePrompt();
+        });
+
+        function setupAccordions() {
+            document.querySelectorAll('.accordion-header').forEach(h => {
+                h.addEventListener('click', function() {
+                    const c = this.nextElementSibling;
+                    this.classList.toggle('active');
+                    c.classList.toggle('active');
+                });
+            });
+        }
+
+        function updateUIForFPV() {
+            const fpv = document.getElementById('fpv-checkbox').checked;
+            document.getElementById('fpv-gender-group').style.display = fpv ? 'block' : 'none';
+            if (fpv) {
+                document.getElementById('second-char-section').style.display = 'none';
+                clearCharacter(2);
+            } else if (document.getElementById('count-select').value === 'couple') {
+                document.getElementById('second-char-section').style.display = 'block';
+            }
+            updatePrompt();
+        }
+
+        function updateSecondCharacterVisibility() {
+            const c = document.getElementById('count-select').value === 'couple' && !document.getElementById('fpv-checkbox').checked;
+            document.getElementById('second-char-section').style.display = c ? 'block' : 'none';
+            if (!c) clearCharacter(2);
+            updatePrompt();
+        }
+
+        function clearCharacter(n) {
+            ['gender', 'age', 'body', 'breast', 'penis', 'skin', 'passive'].forEach(f => {
+                const el = document.getElementById(`${f}-${n}`);
+                if (el) el.value = el.type === 'checkbox' ? false : '';
+            });
+        }
+
+        function updateGenderDisplay(n) {
+            const g = document.getElementById(`gender-${n}`).value;
+            const b = document.getElementById(`breast-group-${n}`);
+            const p = document.getElementById(`penis-group-${n}`);
+            if (g === 'man') { b.style.display = 'none'; p.style.display = 'block'; }
+            else if (g === 'woman') { b.style.display = 'block'; p.style.display = 'none'; }
+            else if (g === 'shemale') { b.style.display = 'block'; p.style.display = 'block'; }
+            else { b.style.display = 'none'; p.style.display = 'none'; }
+            updatePrompt();
+        }
+
+        function updateActionUI() {
+            const a = document.getElementById('action-select').value;
+            document.getElementById('dildo-group').style.display = a === 'dildo' ? 'block' : 'none';
+            updatePoseOptions(a);
+            updatePrompt();
+        }
+
+        function updatePoseOptions(a) {
+            const ps = document.getElementById('pose-select');
+            const cp = compatibilityMatrix[a] || [];
+            Array.from(ps.options).forEach(o => {
+                if (o.value === '') return;
+                if (cp.includes(o.value)) { o.style.opacity = '1'; o.disabled = false; }
+                else { o.style.opacity = '0.4'; o.disabled = true; }
+            });
+            if (ps.value && !cp.includes(ps.value)) ps.value = '';
+        }
+
+        function getRandomAge(a) {
+            const d = { '18_21': [18,21], '21_27': [21,27], '27_35': [27,35], '35_42': [35,42], '42_plus': [42,60] };
+            if (d[a]) { const [min, max] = d[a]; return Math.floor(Math.random() * (max - min + 1)) + min; }
+            const m = { 'young_adult': 'молодой взрослый', 'experienced_mature': 'зрелый опытный' };
+            return m[a] || '';
+        }
+
+        function getCharacterDescription(n) {
+            const g = document.getElementById(`gender-${n}`).value;
+            if (!g) return '';
+            const a = document.getElementById(`age-${n}`).value;
+            const b = document.getElementById(`body-${n}`).value;
+            const br = document.getElementById(`breast-${n}`).value;
+            const p = document.getElementById(`penis-${n}`).value;
+            const s = document.getElementById(`skin-${n}`).value;
+            const pa = document.getElementById(`passive-${n}`).checked;
+
+            const gm = { 'woman': 'a woman', 'man': 'a man', 'shemale': 'a shemale' };
+            let d = gm[g] || '';
+            if (a) { const an = getRandomAge(a); d = an ? `${an} year old ${g}` : `a ${a.replace(/_/g, ' ')} ${g}`; }
+            const bm = { 'slim': 'with a slim body', 'athletic': 'with athletic build', 'curvy': 'with curvy hips', 'thick': 'with a thick body', 'petite': 'with a petite frame', 'voluptuous': 'with voluptuous figure', 'muscular': 'with muscular physique', 'tall_lean': 'tall and lean' };
+            if (b && bm[b]) d += ', ' + bm[b];
+            const brm = { 'small': 'with small breasts', 'medium': 'with medium breasts', 'large': 'with large breasts', 'very_large': 'with very large breasts' };
+            if (br && brm[br]) d += ', ' + brm[br];
+            const pm = { 'small': 'with a small penis', 'average': 'with average penis', 'large': 'with a large penis', 'very_large': 'with a very large penis' };
+            if (p && pm[p]) d += ', ' + pm[p];
+            const sm = { 'smooth': 'with smooth skin', 'natural': 'with natural skin texture', 'pale': 'with pale skin', 'tan': 'with tan skin', 'dark': 'with dark skin', 'freckles': 'with freckles' };
+            if (s && sm[s]) d += ', ' + sm[s];
+            if (pa) d += ', is passive';
+            return d;
+        }
+
+        function buildPrompt() {
+            let pr = '';
+            const fpv = document.getElementById('fpv-checkbox').checked;
+            const cnt = document.getElementById('count-select').value;
+            if (fpv) {
+                const fg = document.getElementById('fpv-gender').value;
+                const fgm = { 'woman': 'a woman', 'man': 'a man', 'shemale': 'a shemale' };
+                pr += `From the perspective of ${fgm[fg] || 'the viewer'}, `;
+            }
+            const c1 = getCharacterDescription(1);
+            if (c1) pr += c1;
+            if (cnt === 'couple' && !fpv) {
+                const c2 = getCharacterDescription(2);
+                if (c2) pr += ` and ${c2}`;
+            }
+            const ac = document.getElementById('action-select').value;
+            if (ac) {
+                const am = { 'sucking_penis': 'is sucking penis', 'licking_pussy': 'is licking pussy', 'deepthroat': 'is deepthroating', 'vaginal': 'is having vaginal sex', 'anal': 'is having anal sex', 'fingering': 'is fingering', 'dildo': 'is using a dildo', 'handjob': 'is giving a handjob', 'footjob': 'is giving a footjob', 'kissing': 'is kissing passionately', 'stripping': 'is stripping slowly' };
+                if (am[ac]) pr += `, ${am[ac]}`;
+            }
+            const po = document.getElementById('pose-select').value;
+            if (po) {
+                const pm = { 'kneeling': 'kneeling', 'lying_back': 'lying on back', 'lying_stomach': 'lying on stomach', 'sitting_lap': 'sitting on lap', 'standing': 'standing', 'missionary': 'in missionary position', 'doggy': 'in doggy style', 'cowgirl': 'in cowgirl position', 'reverse_cowgirl': 'in reverse cowgirl', 'spooning': 'spooning', 'bent_over': 'bent over' };
+                if (pm[po]) pr += `, ${pm[po]}`;
+            }
+            const en = document.getElementById('environment-select').value;
+            if (en) {
+                const em = { 'bedroom': 'in a bedroom', 'bathroom': 'in a bathroom', 'living_room': 'in a living room', 'office': 'in an office', 'hotel_room': 'in a hotel room', 'kitchen': 'in a kitchen', 'outdoor': 'outdoors', 'beach': 'on a beach', 'pool': 'by a pool' };
+                if (em[en]) pr += `, ${em[en]}`;
+            }
+            pr += '. ';
+            const at = document.getElementById('atmosphere-select').value;
+            if (at) {
+                const atm = { 'intimate': 'intimate', 'sensual': 'sensual', 'playful': 'playful', 'passionate': 'passionate', 'romantic': 'romantic' };
+                if (atm[at]) pr += `${atm[at]} atmosphere, `;
+            }
+            const li = document.getElementById('lighting-select').value;
+            if (li) {
+                const lim = { 'soft': 'soft lighting', 'dim': 'dim lighting', 'natural': 'natural lighting', 'dramatic': 'dramatic lighting' };
+                if (lim[li]) pr += `${lim[li]}, `;
+            }
+            const st = document.getElementById('style-select').value || 'photorealistic';
+            pr += stylesSuffixes[st];
+            return pr;
+        }
+
+        function updatePrompt() {
+            const p = buildPrompt();
+            document.getElementById('prompt-preview').textContent = p;
+            document.getElementById('prompt-textarea').value = p;
+        }
+
+        function toggleAdvancedMode() {
+            document.getElementById('advanced-mode-area').style.display = document.getElementById('advanced-mode-toggle').checked ? 'block' : 'none';
+        }
+
+        function resetPrompt() {
+            updatePrompt();
+        }
+
+        async function generateImageButton() {
+            if (isGenerating) return;
+            isGenerating = true;
+            const btn = document.getElementById('generate-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳';
+
+            try {
+                const pr = document.getElementById('advanced-mode-toggle').checked ? document.getElementById('prompt-textarea').value : buildPrompt();
+                const res = document.getElementById('resolution-select').value;
+                const [w, h] = res.split('x').map(Number);
+                const bc = parseInt(document.getElementById('batch-count').value) || 1;
+                let bs = document.getElementById('seed-input').value;
+
+                for (let i = 0; i < bc; i++) {
+                    const sd = bs ? parseInt(bs) + i : undefined;
+                    try {
+                        const imageUrl = await T2i({
+                            prompt: pr,
+                            negativePrompt: negativePrompt,
+                            width: w,
+                            height: h,
+                            model: 'flux',
+                            seed: sd
+                        });
+
+                        if (imageUrl) {
+                            addImageToGallery(imageUrl, pr, sd, res);
+                        }
+                    } catch (e) {
+                        console.error('Gen error:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Error:', e);
+            } finally {
+                isGenerating = false;
+                btn.disabled = false;
+                btn.textContent = 'ECSTASY';
+            }
+        }
+
+        function addImageToGallery(img, pr, sd, res) {
+            const gl = document.getElementById('gallery');
+            if (gl.children.length === 1) gl.innerHTML = '';
+            const it = document.createElement('div');
+            it.className = 'gallery-item';
+            const ig = document.createElement('img');
+            ig.src = img;
+            const inf = document.createElement('div');
+            inf.className = 'gallery-info';
+            inf.textContent = pr.substring(0, 40) + '...';
+            it.appendChild(ig);
+            it.appendChild(inf);
+            it.addEventListener('click', () => openModal(img, pr, sd, res));
+            gl.insertBefore(it, gl.firstChild);
+        }
+
+        function openModal(img, pr, sd, res) {
+            document.getElementById('modal-image').src = img;
+            document.getElementById('modal-prompt').textContent = pr;
+            document.getElementById('modal-settings').innerHTML = `<p>Seed: ${sd || 'Random'}</p><p>Res: ${res}</p><p>Model: FLUX</p>`;
+            document.getElementById('image-modal').classList.add('active');
+            window.currentModalPrompt = pr;
+        }
+
+        function closeModal() {
+            document.getElementById('image-modal').classList.remove('active');
+        }
+
+        function copyPromptToClipboard() {
+            if (window.currentModalPrompt) {
+                navigator.clipboard.writeText(window.currentModalPrompt).then(() => alert('Скопировано!'));
+            }
+        }
+
+        document.getElementById('image-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });

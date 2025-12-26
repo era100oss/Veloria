@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veloria - Where Desire Becomes Art</title>
+    <style>
+        :root {
+            --bg-primary: #0E0E11;
+            --bg-secondary: #14141A;
+            --text-primary: #E6E6EB;
+            --text-muted: #9A9AA5;
+            --accent: #C23A5B;
+            --radius: 16px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-primary); color: var(--text-primary); width: 100%; height: 100%; }
+        .container { display: flex; width: 100%; height: 100vh; gap: 24px; padding: 24px; background: var(--bg-primary); }
+        .panel-left { flex: 0 0 480px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding-right: 12px; }
+        .panel-right { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+        h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 12px; letter-spacing: 1px; }
+        .slogan { text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .accordion { background: var(--bg-secondary); border-radius: var(--radius); overflow: hidden; }
+        .accordion-header { padding: 16px; background: var(--bg-secondary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(230,230,235,0.1); transition: 0.2s; }
+        .accordion-header:hover { background: rgba(230,230,235,0.05); }
+        .accordion-header.active { background: var(--accent); color: white; }
+        .accordion-icon { font-size: 12px; transition: transform 0.3s; }
+        .accordion-header.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .accordion-content.active { max-height: 2000px; padding: 16px; }
+        .control-group { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        select, input, textarea { width: 100%; padding: 12px 16px; background: var(--bg-primary); border: 1px solid rgba(230,230,235,0.15); color: var(--text-primary); border-radius: 12px; font-size: 14px; font-family: inherit; transition: 0.2s; }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(194,58,91,0.1); }
+        select:disabled, input:disabled { opacity: 0.4; cursor: not-allowed; }
+        input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 14px; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 3px; background: var(--bg-primary); -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; border: none; }
+        .slider-value { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .gallery { flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; padding-right: 12px; }
+        .gallery-item { position: relative; border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: 0.2s; border: 2px solid rgba(230,230,235,0.1); }
+        .gallery-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .gallery-item img { width: 100%; height: 240px; object-fit: cover; display: block; }
+        .gallery-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, var(--bg-primary)); padding: 12px 8px 8px; font-size: 11px; color: var(--text-muted); }
+        .btn-generate { background: linear-gradient(135deg, #D64A7A, #C23A5B); color: white; border: none; padding: 16px; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; position: sticky; bottom: 0; }
+        .btn-generate:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(194,58,91,0.3); }
+        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 24px; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-secondary); border-radius: var(--radius); padding: 24px; max-width: 90vw; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(230,230,235,0.1); }
+        .modal-image { width: 100%; border-radius: 12px; margin-bottom: 20px; }
+        .modal-info { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        button { padding: 12px 20px; background: var(--accent); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        button:hover { background: #D64A7A; }
+        .prompt-display { background: var(--bg-primary); border: 1px solid rgba(230,230,235,0.15); padding: 12px; border-radius: 12px; font-size: 12px; color: var(--text-muted); min-height: 60px; max-height: 100px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; line-height: 1.4; font-family: 'Courier New', monospace; }
+        textarea { resize: vertical; min-height: 120px; }
+        .section-title { font-size: 13px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 16px; margin-bottom: 12px; }
+        .incompatible { opacity: 0.4; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(194,58,91,0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(194,58,91,0.5); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel-left">
+            <div>
+                <h1>✨ VELORIA</h1>
+                <div class="slogan">Where Desire Becomes Art</div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>🎭 Scene</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <div class="control-group">
+                        <label>Scene Mode:</label>
+                        <select id="scene-mode" onchange="updateUI()">
+                            <option value="primary">Primary Action</option>
+                            <option value="fetish">Fetish Scene</option>
+                            <option value="composite">Composite</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="fpv-checkbox" onchange="updateUI()">
+                            First Person View (FPV)
+                        </label>
+                    </div>
+                    <div class="control-group" id="fpv-gender-group" style="display: none;">
+                        <label>Observer Gender:</label>
+                        <select id="fpv-gender" onchange="updatePrompt()">
+                            <option value="">Unspecified</option>
+                            <option value="woman">Woman</option>
+                            <option value="man">Man</option>
+                            <option value="shemale">Shemale</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>👥 Characters</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <div class="control-group">
+                        <label>Count:</label>
+                        <select id="count-select" onchange="updateUI()">
+                            <option value="solo">Solo</option>
+                            <option value="couple">Couple</option>
+                        </select>
+                    </div>
+
+                    <div class="section-title">Character 1</div>
+                    <div class="control-group">
+                        <label>Gender:</label>
+                        <select id="gender-1" onchange="updateGenderDisplay(1)">
+                            <option value="">Select</option>
+                            <option value="woman">Woman</option>
+                            <option value="man">Man</option>
+                            <option value="shemale">Shemale</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Age:</label>
+                        <select id="age-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="18_21">18-21</option>
+                            <option value="21_27">21-27</option>
+                            <option value="27_35">27-35</option>
+                            <option value="35_42">35-42</option>
+                            <option value="42_plus">42+</option>
+                            <option value="young_adult">Young Adult</option>
+                            <option value="experienced_mature">Experienced Mature</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Expression:</label>
+                        <select id="expr-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="soft_erotic">Soft Erotic</option>
+                            <option value="sexy">Sexy</option>
+                            <option value="hot">Hot & Desirable</option>
+                            <option value="sensual">Sensual</option>
+                            <option value="alluring">Alluring</option>
+                            <option value="seductive">Seductive</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Body Type:</label>
+                        <select id="body-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="slim">Slim</option>
+                            <option value="athletic">Athletic</option>
+                            <option value="curvy">Curvy</option>
+                            <option value="thick">Thick</option>
+                            <option value="petite">Petite</option>
+                            <option value="voluptuous">Voluptuous</option>
+                            <option value="muscular">Muscular</option>
+                            <option value="tall_lean">Tall & Lean</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="breast-group-1">
+                        <label>Breasts:</label>
+                        <select id="breast-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                            <option value="very_large">Very Large</option>
+                        </select>
+                    </div>
+                    <div class="control-group" id="penis-group-1" style="display: none;">
+                        <label>Penis:</label>
+                        <select id="penis-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="small">Small</option>
+                            <option value="average">Average</option>
+                            <option value="large">Large</option>
+                            <option value="very_large">Very Large</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Skin:</label>
+                        <select id="skin-1" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="smooth">Smooth</option>
+                            <option value="natural">Natural Texture</option>
+                            <option value="pale">Pale</option>
+                            <option value="tan">Tan</option>
+                            <option value="dark">Dark</option>
+                            <option value="freckles">Freckles</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="passive-1" onchange="updatePrompt()">
+                            Passive Role
+                        </label>
+                    </div>
+
+                    <div id="second-char-section" style="display: none;">
+                        <div class="section-title">Character 2</div>
+                        <div class="control-group">
+                            <label>Gender:</label>
+                            <select id="gender-2" onchange="updateGenderDisplay(2)">
+                                <option value="">Select</option>
+                                <option value="woman">Woman</option>
+                                <option value="man">Man</option>
+                                <option value="shemale">Shemale</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Age:</label>
+                            <select id="age-2" onchange="updatePrompt()">
+                                <option value="">Select</option>
+                                <option value="18_21">18-21</option>
+                                <option value="21_27">21-27</option>
+                                <option value="27_35">27-35</option>
+                                <option value="35_42">35-42</option>
+                                <option value="42_plus">42+</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Body Type:</label>
+                            <select id="body-2" onchange="updatePrompt()">
+                                <option value="">Select</option>
+                                <option value="slim">Slim</option>
+                                <option value="athletic">Athletic</option>
+                                <option value="curvy">Curvy</option>
+                                <option value="thick">Thick</option>
+                                <option value="petite">Petite</option>
+                                <option value="voluptuous">Voluptuous</option>
+                                <option value="muscular">Muscular</option>
+                                <option value="tall_lean">Tall & Lean</option>
+                            </select>
+                        </div>
+                        <div class="control-group" id="breast-group-2">
+                            <label>Breasts:</label>
+                            <select id="breast-2" onchange="updatePrompt()">
+                                <option value="">Select</option>
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                                <option value="very_large">Very Large</option>
+                            </select>
+                        </div>
+                        <div class="control-group" id="penis-group-2" style="display: none;">
+                            <label>Penis:</label>
+                            <select id="penis-2" onchange="updatePrompt()">
+                                <option value="">Select</option>
+                                <option value="small">Small</option>
+                                <option value="average">Average</option>
+                                <option value="large">Large</option>
+                                <option value="very_large">Very Large</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Skin:</label>
+                            <select id="skin-2" onchange="updatePrompt()">
+                                <option value="">Select</option>
+                                <option value="smooth">Smooth</option>
+                                <option value="natural">Natural Texture</option>
+                                <option value="pale">Pale</option>
+                                <option value="tan">Tan</option>
+                                <option value="dark">Dark</option>
+                                <option value="freckles">Freckles</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="passive-2" onchange="updatePrompt()">
+                                Passive Role
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>⚡ Actions</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active" id="actions-section">
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>🎯 Modifiers</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active" id="modifiers-section">
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header active"><span>🔞 Fetish</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active" id="fetish-section">
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>📍 Scene</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div class="control-group">
+                        <label>Pose:</label>
+                        <select id="pose-select" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="kneeling">Kneeling</option>
+                            <option value="lying_back">Lying on Back</option>
+                            <option value="lying_stomach">Lying on Stomach</option>
+                            <option value="sitting_lap">Sitting on Lap</option>
+                            <option value="standing">Standing</option>
+                            <option value="missionary">Missionary</option>
+                            <option value="doggy">Doggy Style</option>
+                            <option value="cowgirl">Cowgirl</option>
+                            <option value="reverse_cowgirl">Reverse Cowgirl</option>
+                            <option value="spooning">Spooning</option>
+                            <option value="bent_over">Bent Over</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Environment:</label>
+                        <select id="environment-select" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="bedroom">Bedroom</option>
+                            <option value="bathroom">Bathroom</option>
+                            <option value="living_room">Living Room</option>
+                            <option value="office">Office</option>
+                            <option value="hotel_room">Hotel Room</option>
+                            <option value="kitchen">Kitchen</option>
+                            <option value="outdoor">Outdoor</option>
+                            <option value="beach">Beach</option>
+                            <option value="pool">Pool</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Lighting:</label>
+                        <select id="lighting-select" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="soft">Soft</option>
+                            <option value="dim">Dim</option>
+                            <option value="natural">Natural</option>
+                            <option value="dramatic">Dramatic</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Atmosphere:</label>
+                        <select id="atmosphere-select" onchange="updatePrompt()">
+                            <option value="">Select</option>
+                            <option value="intimate">Intimate</option>
+                            <option value="sensual">Sensual</option>
+                            <option value="playful">Playful</option>
+                            <option value="passionate">Passionate</option>
+                            <option value="romantic">Romantic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>🎨 Style</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div class="control-group">
+                        <label>Image Style:</label>
+                        <select id="style-select" onchange="updatePrompt()">
+                            <option value="photorealistic">Photorealistic</option>
+                            <option value="realistic">Realistic</option>
+                            <option value="artistic">Artistic</option>
+                            <option value="cinematic">Cinematic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>⚙️ Technical</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div class="control-group">
+                        <label>Resolution:</label>
+                        <select id="resolution-select">
+                            <option value="512x512">512×512</option>
+                            <option value="512x768">512×768</option>
+                            <option value="768x512">768×512</option>
+                            <option value="768x768">768×768</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Guidance Scale:</label>
+                        <input type="range" id="guidance-scale" min="1" max="20" step="0.5" value="7.5" oninput="updateGuidanceDisplay()">
+                        <div class="slider-value"><span id="guidance-value">7.5</span></div>
+                    </div>
+                    <div class="control-group">
+                        <label>Batch Count (1-15):</label>
+                        <input type="range" id="batch-count" min="1" max="15" step="1" value="1" oninput="updateBatchDisplay()">
+                        <div class="slider-value"><span id="batch-value">1</span></div>
+                    </div>
+                    <div class="control-group">
+                        <label>Seed (empty = random):</label>
+                        <input type="text" id="seed-input" placeholder="optional">
+                    </div>
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="advanced-mode-toggle" onchange="toggleAdvancedMode()">
+                            Advanced Mode
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header"><span>📝 Prompt</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div id="prompt-preview" class="prompt-display">Prompt will appear here...</div>
+                    <div id="advanced-mode-area" style="display: none; margin-top: 12px;">
+                        <textarea id="prompt-textarea"></textarea>
+                        <button onclick="resetPrompt()" style="width: 100%; margin-top: 12px;">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="gallery" id="gallery">
+                <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 60px 20px;">Ready to create...</div>
+            </div>
+            <button class="btn-generate" id="generate-btn" onclick="generateImages()">BOOM</button>
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <img id="modal-image" class="modal-image" src="" alt="">
+            <div class="modal-info">
+                <h4 style="color: var(--accent); margin-bottom: 12px;">Prompt:</h4>
+                <div id="modal-prompt" style="margin-bottom: 20px;"></div>
+                <h4 style="color: var(--accent); margin-bottom: 12px;">Details:</h4>
+                <div id="modal-settings"></div>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="closeModal()">Close</button>
+                <button onclick="copyPrompt()">Copy Prompt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ПОЛНЫЕ ДАННЫЕ ИЗ ПРИЛОЖЕНИЯ (9.2-9.12)
+        const allActions = {
+            oral_sucking: { name: 'Sucking Penis', prompt: 'sucking a penis', category: 'oral', compatible_poses: ['kneeling', 'lying_back', 'sitting_lap', 'standing'] },
+            oral_licking: { name: 'Licking Pussy', prompt: 'licking a pussy', category: 'oral', compatible_poses: ['kneeling', 'lying_back', 'sitting_lap', 'standing'] },
+            oral_deepthroat: { name: 'Deepthroat', prompt: 'deepthroating', category: 'oral', compatible_poses: ['kneeling', 'sitting_lap', 'standing'] },
+            vaginal: { name: 'Vaginal Penetration', prompt: 'having vaginal sex', category: 'penetration', compatible_poses: ['missionary', 'doggy', 'cowgirl', 'reverse_cowgirl', 'spooning', 'bent_over'] },
+            anal: { name: 'Anal Penetration', prompt: 'having anal sex', category: 'penetration', compatible_poses: ['doggy', 'missionary', 'bent_over', 'cowgirl'] },
+            fingering: { name: 'Fingering', prompt: 'being fingered', category: 'penetration', compatible_poses: ['lying_back', 'kneeling', 'sitting_lap'] },
+            dildo: { name: 'Using Dildo', prompt: 'using a dildo', category: 'penetration', compatible_poses: ['lying_back', 'sitting_lap', 'standing', 'doggy'] },
+            handjob: { name: 'Handjob', prompt: 'giving a handjob', category: 'penetration', compatible_poses: ['sitting_lap', 'standing', 'lying_back'] },
+            footjob: { name: 'Footjob', prompt: 'giving a footjob', category: 'penetration', compatible_poses: ['lying_back', 'standing'] },
+            kissing: { name: 'Passionate Kissing', prompt: 'kissing passionately', category: 'intimate', compatible_poses: ['standing', 'sitting_lap', 'lying_back', 'missionary', 'spooning'] },
+            stripping: { name: 'Slow Stripping', prompt: 'stripping slowly', category: 'teasing', compatible_poses: ['standing', 'sitting_lap'] },
+            feet_sucking: { name: 'Sucking Toes', prompt: 'sucking toes', category: 'fetish', compatible_poses: ['lying_back', 'kneeling', 'sitting_lap'] },
+            feet_kissing: { name: 'Kissing Feet', prompt: 'kissing feet', category: 'fetish', compatible_poses: ['lying_back', 'kneeling'] },
+            feet_worship: { name: 'Foot Worship', prompt: 'worshiping feet', category: 'fetish', compatible_poses: ['kneeling', 'lying_back'] },
+            feet_massage: { name: 'Foot Massage', prompt: 'massaging feet', category: 'fetish', compatible_poses: ['lying_back', 'sitting_lap'] },
+            bdsm_spanking: { name: 'Spanking', prompt: 'being spanked', category: 'fetish', compatible_poses: ['doggy', 'bent_over', 'kneeling'] },
+            bdsm_bondage: { name: 'Bondage', prompt: 'in bondage', category: 'fetish', compatible_poses: ['kneeling', 'lying_back', 'standing'] },
+            bdsm_whip: { name: 'Using Whip', prompt: 'being whipped', category: 'fetish', compatible_poses: ['standing', 'doggy', 'bent_over'] },
+            bdsm_

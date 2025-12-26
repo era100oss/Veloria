@@ -1,0 +1,10 @@
+ТЗ:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D0%A2%D0%97%20v3.docx
+Приложение с базой данных:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D0%9F%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5.docx
+Краткий справочник по Perchance:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20%D0%BF%D0%BE%20perchance.docx
+Краткий справочник по t2i plugin:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20t2i%20plugin.docx
+Краткий справочник Ai-text plugin;https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20ai%20text%20plugin.docx
+Краткий справочник по KV plugin:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20kv%20plugin.docx
+Краткий справочник по Upload plugin:https://github.com/era100oss/Veloria/raw/refs/heads/main/instructions/%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20upload%20plugin.docx
+
+Текущий код lists:
+Текущий код HTML:
