@@ -1,0 +1,542 @@
+
+Приложение: Полный список опций для сборки промта (Prompt Fragments)
+
+Все фрагменты на английском (для промта). Русский перевод (ru) — для интерфейса.
+
+9.1. Участники (Participants)
+
+Количество (Count)
+
+· count_solo: English: a single / RU: один персонаж
+· count_couple: English: a couple of / RU: пара персонажей
+
+Гендер (Gender)
+
+· gender_woman: English: a woman / RU: женщина
+· gender_man: English: a man / RU: мужчина
+· gender_shemale: English: a shemale / RU: транс
+
+Возраст (Age)
+Для диапазонов в промт подставляется случайное число: Math.floor(Math.random() * (max – min + 1)) + min.
+
+· age_18_21: Type: range, Min: 18, Max: 21 / RU: 18-21 год
+· age_21_27: Type: range, Min: 21, Max: 27 / RU: 21-27 лет
+· age_27_35: Type: range, Min: 27, Max: 35 / RU: 27-35 лет
+· age_35_42: Type: range, Min: 35, Max: 42 / RU: 35-42 года
+· age_42_plus: Type: range, Min: 42, Max: 60 / RU: 42+ года
+· age_young_adult: Type: category, Prompt: young adult / RU: молодой взрослый
+· age_experienced_mature: Type: category, Prompt: experienced mature / RU: зрелый опытный
+
+Сексуальная выразительность тела (Sexual Body Expression)
+
+· expr_soft_erotic: English: with a soft, erotic presence / RU: с мягкой эротической атмосферой
+· expr_sexy: English: with a sexy appearance / RU: сексуальная внешность
+· expr_hot: English: looking hot and desirable / RU: горячая и желаемая
+· expr_sensual_appearance: English: with a sensual appearance / RU: чувственная внешность
+· expr_alluring: English: with an alluring presence / RU: с манящим присутствием
+· expr_seductive: English: with a seductive look / RU: соблазнительный взгляд
+· expr_sensual_curves: English: highlighting sensual curves / RU: подчеркивая чувственные изгибы
+· expr_provocative_posture: English: in a provocative posture / RU: в вызывающей позе
+· expr_charming_figure: English: with a charming figure / RU: с очаровательной фигурой
+
+Тип телосложения (Body Type)
+
+· body_slim: English: with a slim body / RU: стройное телосложение
+· body_athletic: English: with an athletic build / RU: атлетическое телосложение
+· body_curvy: English: with curvy hips / RU: пышные бедра
+· body_thick: English: with a thick body / RU: плотное телосложение
+· body_petite: English: with a petite frame / RU: миниатюрное телосложение
+· body_voluptuous: English: with a voluptuous figure / RU: соблазнительные формы
+· body_muscular: English: with a muscular physique / RU: мускулистое телосложение
+· body_tall_lean: English: tall and lean / RU: высокий и худощавый
+
+Размер груди (Breast Size)
+
+· breast_small: English: with small breasts / RU: маленькая грудь
+· breast_medium: English: with medium breasts / RU: средняя грудь
+· breast_large: English: with large breasts / RU: большая грудь
+· breast_very_large: English: with very large breasts / RU: очень большая грудь
+
+Размер пениса (Penis Size)
+
+· penis_small: English: with a small penis / RU: маленький пенис
+· penis_average: English: with an average-sized penis / RU: средний пенис
+· penis_large: English: with a large penis / RU: большой пенис
+· penis_very_large: English: with a very large penis / RU: очень большой пенис
+
+Детали кожи (Skin Details)
+
+· skin_smooth: English: with smooth skin / RU: гладкая кожа
+· skin_natural: English: with natural skin texture / RU: естественная текстура кожи
+· skin_soft_hl: English: with soft highlights on the skin / RU: мягкие блики на коже
+· skin_pale: English: with pale skin / RU: бледная кожа
+· skin_tan: English: with tan skin / RU: загорелая кожа
+· skin_dark: English: with dark skin / RU: темная кожа
+· skin_freckles: English: with freckles / RU: веснушки
+· skin_blemishes: English: with natural blemishes / RU: естественные несовершенства кожи
+
+9.2. Основные действия (Primary Actions)
+
+Токен {target} заменяется на the viewer (FPV) или описание второго персонажа.
+
+Оральный секс (Oral Sex)
+
+· act_oral_on_man: English:  is sucking {target}'s penis RU: минет
+· act_oral_on_woman: English: is licking her pussy / RU: куни
+· act_oral_deepthroat: English: deepthroating his penis / RU: глубокий минет
+
+Проникновение (Penetration)
+
+· act_pen_vaginal: English: vaginal penetration / RU: вагинальное проникновение
+· act_pen_anal: English: anal penetration / RU: анальное проникновение
+· act_pen_fingering: English: fingering / RU: фингеринг
+· act_pen_dildo: English: dildo penetration / RU: проникновение дилдо
+· act_pen_double: English: double penetration / RU: двойное проникновение
+· act_pen_handjob: English: giving a handjob / RU: рукоблудие
+· act_pen_footjob: English: giving a footjob / RU: футджоб
+
+Дразнение (Teasing)
+
+· act_tease_slow_hands: English: slow teasing with hands (touching and caressing) / RU: медленное дразнение руками
+· act_tease_words: English: teasing with words (dirty talk) / RU: дразнение словами (грязные разговоры)
+· act_tease_strip_slow: English: stripping slowly / RU: медленный стриптиз
+· act_tease_body_lang: English: teasing with body language (seductive moves) / RU: дразнение языком тела
+· act_tease_making_out: English: making out (passionate kissing) / RU: страстные поцелуи
+· act_tease_nipples: English: playing with nipples / RU: игра с сосками
+· act_tease_biting: English: biting and nibbling on neck or ears / RU: укусы и покусывания шеи или ушей
+
+БДСМ (BDSM)
+
+· act_bdsm_spanking: English: spanking (slapping) / RU: шлёпанье
+· act_bdsm_bondage: English: bondage (rope, cuffs) / RU: бондаж (верёвки, наручники)
+· act_bdsm_whip: English: using a whip or flogger / RU: использование кнута или плётки
+· act_bdsm_feet_worship: English: foot worship / RU: поклонение ногам
+· act_bdsm_choking_light: English: choking (light choking) / RU: легкое удушение
+· act_bdsm_domination: English: domination and submission (commands, control) / RU: доминирование и подчинение
+· act_bdsm_roleplay: English: roleplay scenarios (teacher/student, master/slave) / RU: ролевые игры (учитель/ученик, хозяин/раб)
+· act_bdsm_sensory: English: sensory play (ice, wax, feathers) / RU: сенсорные игры (лёд, воск, перья)
+
+Взаимная интимность (Mutual Intimacy)
+
+· act_intimacy_kissing: English: kissing passionately / RU: страстные поцелуи
+· act_intimacy_touching: English: intimate touching (stroking, caressing) / RU: интимные прикосновения
+· act_intimacy_cuddling: English: cuddling / RU: объятия
+· act_intimacy_massage: English: gentle massages / RU: нежные массажи
+· act_intimacy_slow_move: English: slow, sensual movement / RU: медленные чувственные движения
+· act_intimacy_skin_contact: English: skin-on-skin contact / RU: контакт кожа к коже
+
+Чувственные прикосновения (Sensual Touching)
+
+· act_sensual_strokes_back: English: gentle strokes across the back / RU: нежные поглаживания по спине
+· act_sensual_caress_face: English: caressing the face and neck / RU: ласкание лица и шеи
+· act_sensual_massage_thighs: English: massaging the thighs or chest / RU: массаж бёдер или груди
+· act_sensual_hands_sensitive: English: hands on sensitive areas (ears, nipples) / RU: руки на чувствительных зонах
+· act_sensual_slow_body_rubs: English: slow body rubs / RU: медленные растирания тела
+
+Экспозиция (Exhibitionism)
+
+· act_exhib_public_display: English: public display (flashing in public) / RU: публичная демонстрация
+· act_exhib_performance_viewer: English: sexual performance for the viewer / RU: сексуальное выступление для зрителя
+· act_exhib_voyeurism: English: voyeurism (watching others) / RU: вуайеризм (наблюдение за другими)
+· act_exhib_striptease: English: striptease / RU: стриптиз
+· act_exhib_seduction_clothing: English: seduction through clothing / RU: соблазнение через одежду
+
+Фантазии и ролевые игры (Fantasy and Roleplay)
+
+· act_fantasy_teacher_student: English: teacher/student roleplay / RU: ролевая игра учитель/ученик
+· act_fantasy_doctor_patient: English: doctor/patient scenario / RU: сценарий врач/пациент
+· act_fantasy_master_slave: English: master/slave / RU: хозяин/раб
+· act_fantasy_romantic_dinner: English: romantic dinner seduction / RU: соблазнение за романтическим ужином
+· act_fantasy_character: English: fantasy character (vampire, knight, etc.) / RU: фантазийный персонаж (вампир, рыцарь и т.д.)
+
+Экстремальные действия (Extreme)
+
+· act_extreme_deep_pen: English: deep penetration (hard or intense) / RU: глубокое проникновение
+· act_extreme_choking_heavy: English: choking (extreme, heavy) / RU: жесткое удушение
+· act_extreme_rough_spanking: English: rough spanking (harder impacts) / RU: жёсткие шлепки
+· act_extreme_breath_play: English: breath play / RU: дыхательные игры
+· act_extreme_public_sex: English: public sex scenarios / RU: сценарии публичного секса
+· act_extreme_domination_restraints: English: domination with restraints / RU: доминирование с ограничениями
+
+Фут-фетиш (Feet Fetish Actions)
+
+· act_feet_sucking_toes: English: sucking toes / RU: сосание пальцев ног
+· act_feet_kissing_feet: English: kissing feet / RU: поцелуи ног
+· act_feet_worship: English: foot worship / RU: поклонение ногам
+· act_feet_massage: English: foot massage / RU: массаж ног
+· act_feet_trampling: English: trampling / RU: топтание
+· act_feet_play: English: foot play / RU: игры с ногами
+· act_feet_walking_barefoot: English: walking barefoot / RU: хождение босиком
+
+Бот-фетиш (Boot Fetish Actions)
+
+· act_boot_kissing: English: boot kissing / RU: поцелуи ботинок
+· act_boot_removal: English: boot removal / RU: снятие ботинок
+· act_boot_worship: English: boot worship / RU: поклонение ботинкам
+· act_boot_high_heels: English: high heel fetish / RU: фетиш на высокие каблуки
+
+9.3. Модификаторы действий (Action Modifiers)
+
+Применяются к основному действию.
+
+Тактильные контакты (Touch)
+(Включены все из исходного списка, частично дублируются с основными, но как усилители)
+
+· mod_touch_lick_body: English: licking {target}’s body / RU: облизывание тела
+· mod_touch_caress: English: touching and caressing {target} / RU: прикосновения и ласки
+· mod_touch_play_nipples: English: playing with {target}’s nipples / RU: игра с сосками
+· mod_touch_bite: English: biting {target} / RU: укусы
+· mod_touch_caress_gentle: English: caressing {target} gently / RU: нежные ласки
+· mod_touch_move_sensual: English: moving sensually against {target} / RU: чувственные движения
+· mod_touch_stroke_skin: English: stroking {target}’s skin / RU: поглаживание кожи
+· mod_touch_caress_face: English: caressing {target}’s face / RU: ласкание лица
+· mod_touch_massage_body: English: massaging {target}’s body / RU: массаж тела
+· mod_touch_sensitive_areas: English: touching {target}’s sensitive areas / RU: прикосновение к чувствительным зонам
+· mod_touch_rub_slow: English: rubbing against {target} slowly / RU: медленное трение
+
+БДСМ Модификаторы (BDSM Modifiers)
+
+· mod_bdsm_ice: English: using ice on {target}’s skin / RU: использование льда
+· mod_bdsm_restrain: English: restraining {target} / RU: ограничение движения
+· mod_bdsm_discipline: English: disciplining {target} / RU: дисциплинирование
+· mod_bdsm_punish: English: punishing {target} / RU: наказание
+
+Фетиш-Модификаторы (Fetish Modifiers)
+
+· mod_fetish_feet_play: English: playing with {target}’s feet / RU: игра с ногами
+
+Звуки и речь (Sound and Speech)
+
+· mod_sound_whisper: English: whispering to {target} / RU: шёпот
+· mod_sound_moan: English: moaning loudly / RU: громкие стоны
+· mod_sound_dirty_talk: English: talking dirty / RU: грязные разговоры
+
+Прочие модификаторы (Miscellaneous Modifiers)
+
+· mod_misc_eye_contact: English: looking into {target}’s eyes / RU: взгляд в глаза
+· mod_misc_smile_seductive: English: smiling seductively / RU: соблазнительная улыбка
+· mod_misc_breath_heavy: English: breathing heavily / RU: тяжёлое дыхание
+
+9.4. Позы (Poses)
+
+Сгруппированы по совместимости с действиями.
+
+Для орального секса (Oral Sex Poses)
+
+· pose_oral_kneeling: English: kneeling / RU: на коленях
+· pose_oral_lying_back: English: lying on back / RU: лёжа на спине
+· pose_oral_lying_stomach: English: lying on stomach / RU: лёжа на животе
+· pose_oral_sitting_lap: English: sitting on lap / RU: сидя на коленях
+· pose_oral_standing: English: standing / RU: стоя
+· pose_oral_leaning_forward: English: leaning forward / RU: наклоняясь вперёд
+· pose_oral_sitting_on_face: English: sitting on her/viewer/him face / RU: сидя на лице
+· pose_oral_sixty_nine: English: in position sixty-nine / RU: в позе 69
+
+Для проникновения (Penetration Poses)
+
+· pose_pen_missionary: English: missionary position / RU: миссионерская поза
+· pose_pen_doggy: English: doggy style / RU: поза собачки
+· pose_pen_cowgirl: English: cowgirl / RU: наездница
+· pose_pen_reverse_cowgirl: English: reverse cowgirl / RU: обратная наездница
+· pose_pen_spooning: English: spooning / RU: ложки
+· pose_pen_standing: English: standing penetration / RU: проникновение стоя
+· pose_pen_bent_over: English: bent over / RU: наклонившись вперёд
+
+Для дразнения (Teasing Poses)
+
+· pose_tease_standing_close: English: standing close / RU: стоя рядом
+· pose_tease_sitting_edge_bed: English: sitting on the edge of the bed / RU: сидя на краю кровати
+· pose_tease_leaning_wall: English: leaning against the wall / RU: опираясь на стену
+· pose_tease_on_all_fours: English: on all fours / RU: на четвереньках
+· pose_tease_straddling: English: straddling / RU: сидя верхом
+
+Для БДСМ (BDSM Poses)
+
+· pose_bdsm_restrained: English: restrained (e.g., with ropes) / RU: с ограничениями
+· pose_bdsm_kneeling: English: kneeling / RU: на коленях
+· pose_bdsm_bent_over: English: bent over / RU: наклонившись
+· pose_bdsm_tied_up: English: tied up / RU: связанный
+· pose_bdsm_submissive: English: submissive position / RU: поза подчинённого
+· pose_bdsm_dominant: English: dominant position / RU: поза доминирующего
+
+Для взаимной интимности (Mutual Intimacy Poses)
+
+· pose_intimacy_cuddling: English: cuddling / RU: обнимания
+· pose_intimacy_spooning: English: spooning / RU: ложки
+· pose_intimacy_lying_together: English: laying together / RU: лежа рядом
+· pose_intimacy_holding: English: holding each other / RU: обнимая друг друга
+· pose_intimacy_kissing: English: kissing / RU: поцелуи
+
+Для чувственных прикосновений (Sensual Touching Poses)
+
+· pose_sensual_slow_caressing: English: slow caressing / RU: медленные ласки
+· pose_sensual_massaging: English: massaging / RU: массаж
+· pose_sensual_tracing_fingers: English: tracing with fingers / RU: проведение пальцами
+· pose_sensual_gentle_stroking: English: gentle stroking / RU: нежные поглаживания
+
+Для экспозиции (Exhibitionism Poses)
+
+· pose_exhib_standing_naked: English: standing naked / RU: стоя голым
+· pose_exhib_teasing_public: English: teasing in public / RU: провокация в общественном месте
+· pose_exhib_undressing_slow: English: undressing slowly / RU: медленное раздевание
+
+Для фантазий и ролевых игр (Fantasy and Roleplay Poses)
+
+· pose_fantasy_teacher_student: English: teacher/student roleplay / RU: учитель/ученик
+· pose_fantasy_master_slave: English: master/slave roleplay / RU: хозяин/раб
+· pose_fantasy_police_captive: English: police/captive / RU: полиция/пленник
+· pose_fantasy_vampire_maid: English: vampire/maid / RU: вампир/горничная
+· pose_fantasy_seduction_restaurant: English: seduction in a restaurant / RU: соблазнение в ресторане
+
+9.5. Фетиши: детали (Fetish Details)
+
+Фут-фетиш (Feet Fetish)
+Поза ног (Foot Posture)
+
+· fet_feet_posture_pointed: English: with pointed toes / RU: с вытянутыми носками
+· fet_feet_posture_flexed: English: with flexed toes / RU: с согнутыми пальцами
+· fet_feet_posture_arched: English: with arched feet / RU: с выгнутой аркой стопы
+· fet_feet_posture_resting: English: with resting feet / RU: со стопами в покое
+· fet_feet_posture_flat: English: with flat feet / RU: с плоскими стопами
+
+Текстура кожи ног (Foot Skin Texture)
+
+· fet_feet_skin_smooth: English: with smooth feet / RU: с гладкими стопами
+· fet_feet_skin_rough: English: with rough feet / RU: с шершавыми стопами
+· fet_feet_skin_dirty: English: with dirty feet / RU: с грязными стопами
+· fet_feet_skin_natural_lines: English: with natural lines on feet / RU: с естественными морщинками на стопах
+· fet_feet_skin_clean: English: with clean feet / RU: с чистыми стопами
+
+Ногти на ногах (Toenails)
+Форма:
+
+· fet_feet_nails_round: English: with round toenails / RU: с круглыми ногтями
+· fet_feet_nails_square: English: with square toenails / RU: с квадратными ногтями
+· fet_feet_nails_almond: English: with almond-shaped toenails / RU: с миндалевидными ногтями
+· fet_feet_nails_stiletto: English: with stiletto toenails / RU: со стилетообразными ногтями
+  Цвет:
+· fet_feet_nails_red: English: with red toenails / RU: с красными ногтями
+· fet_feet_nails_black: English: with black toenails / RU: с черными ногтями
+· fet_feet_nails_nude: English: with nude toenails / RU: с нюдовыми ногтями
+· fet_feet_nails_white: English: with white toenails / RU: с белыми ногтями
+· fet_feet_nails_pink: English: with pink toenails / RU: с розовыми ногтями
+· fet_feet_nails_french: English: with French tip toenails / RU: с французским маникюром
+
+Бондаж (Bondage)
+
+· fet_bondage_rope: English: rope bondage / RU: верёвочный бондаж
+· fet_bondage_cuffs: English: cuffs / RU: наручники
+· fet_bondage_shibari: English: shibari / RU: шибари
+
+Шлепки (Spanking)
+
+· fet_spanking_light: English: light spanking / RU: лёгкие шлепки
+· fet_spanking_hard: English: hard spanking / RU: жёсткие шлепки
+· fet_spanking_during_sex: English: spanking during sex / RU: шлепки во время секса
+
+Кроссдрессинг (Cross-Dressing)
+
+· fet_cross_male: English: male cross-dressing / RU: мужской кроссдрессинг
+· fet_cross_female: English: female cross-dressing / RU: женский кроссдрессинг
+
+Публичные фетиши (Public Fetishes)
+
+· fet_public_flashing: English: flashing / RU: показ
+· fet_public_masturbation: English: public masturbation / RU: публичная мастурбация
+· fet_public_sex: English: public sex / RU: публичный секс
+
+Ролевые игры (Roleplay Scenarios)
+
+· fet_role_teacher_student: English: teacher/student / RU: учитель/ученик
+· fet_role_master_slave: English: master/slave / RU: хозяин/раб
+· fet_role_doctor_patient: English: doctor/patient / RU: врач/пациент
+· fet_role_police_captive: English: police/captive / RU: полиция/пленник
+
+9.6. Модификаторы персонажей (Character Modifiers)
+
+Состояния и позы (States & Poses)
+
+· char_state_tied_up: English: tied up / RU: связан(а)
+· char_state_restrained: English: restrained / RU: с ограничением движения
+· char_state_on_knees: English: on {his/her} knees / RU: на коленях
+· char_state_bent_over: English: bent over / RU: наклонившись
+· char_state_on_all_fours: English: on all fours / RU: на четвереньках
+· char_state_standing: English: standing / RU: стоя
+· char_state_lying_down: English: lying down / RU: лежа
+· char_state_sitting: English: sitting / RU: сидя
+· char_state_leaning: English: leaning against {surface} / RU: прислонившись
+· char_state_spread_eagle: English: spread eagle / RU: в позе распятого
+
+Выражения лица (Facial Expressions)
+
+· char_face_pleasure: English: with a look of pleasure / RU: с выражением удовольствия
+· char_face_surprise: English: with a surprised expression / RU: с удивлённым выражением
+· char_face_pain: English: with a pained expression / RU: с выражением боли
+· char_face_seduction: English: with a seductive look / RU: с соблазнительным взглядом
+· char_face_discomfort: English: with a look of discomfort / RU: с выражением дискомфорта
+· char_face_anger: English: with an angry expression / RU: с злым выражением
+· char_face_fear: English: with a fearful expression / RU: с испуганным выражением
+· char_face_ecstasy: English: with an ecstatic expression / RU: с экстатическим выражением
+
+Жидкости (Fluids)
+Тип и расположение:
+
+· char_fluid_cum_face: English: with cum on {his/her} face / RU: со спермой на лице
+· char_fluid_saliva_body: English: with saliva on {his/her} body / RU: со слюной на теле
+· char_fluid_sweat: English: sweating / RU: потный/потная
+· char_fluid_lube_hands: English: with lube on {his/her} hands / RU: с лубрикантом на руках
+· char_fluid_vaginal: English: with vaginal fluids / RU: с вагинальными выделениями
+· char_fluid_urine_legs: English: with urine on {his/her} legs / RU: с мочой на ногах
+
+Одежда и роли (Clothing & Roles)
+
+· char_clothing_naked: English: naked / RU: обнажённый(ая)
+· char_clothing_partial: English: partially dressed / RU: частично одетый(ая)
+· char_clothing_teacher: English: dressed as a teacher / RU: одет(а) как учитель
+· char_clothing_doctor: English: dressed as a doctor / RU: одет(а) как врач
+· char_clothing_police: English: dressed as a police officer / RU: одет(а) как полицейский
+· char_clothing_nurse: English: dressed as a nurse / RU: одет(а) как медсестра
+· char_clothing_maid: English: dressed as a maid / RU: одет(а) как горничная
+· char_clothing_student: English: dressed as a student / RU: одет(а) как студент
+· char_clothing_uniform: English: in uniform / RU: в форме
+· char_clothing_heels: English: in high heels / RU: на высоких каблуках
+· char_clothing_barefoot: English: barefoot / RU: босиком
+· char_clothing_collar: English: wearing a collar / RU: в ошейнике
+· char_clothing_leash: English: wearing a leash / RU: с поводком
+· char_clothing_handcuffs: English: wearing handcuffs / RU: в наручниках
+· char_clothing_cross_woman: English: dressed as a woman / RU: одет(а) как женщина
+· char_clothing_cross_man: English: dressed as a man / RU: одет(а) как мужчина
+· char_clothing_vampire: English: dressed as a vampire / RU: одет(а) как вампир
+· char_clothing_knight: English: dressed as a knight / RU: одет(а) как рыцарь
+· char_clothing_lingerie: English: in lingerie / RU: в нижнем белье
+· char_clothing_stockings: English: in stockings / RU: в чулках
+
+Детали тела (Body Details)
+
+· char_body_pointed_toes: English: with pointed toes / RU: с вытянутыми носками
+· char_body_arched_feet: English: with arched feet / RU: с выгнутыми стопами
+· char_body_smooth_feet: English: with smooth feet / RU: с гладкими стопами
+· char_body_dirty_feet: English: with dirty feet / RU: с грязными стопами
+· char_body_calloused_feet: English: with calloused feet / RU: с огрубевшими стопами
+· char_body_freckles: English: with freckles / RU: с веснушками
+· char_body_tattoos: English: with tattoos / RU: с татуировками
+· char_body_piercings: English: with piercings / RU: с пирсингом
+· char_body_hair: English: with body hair / RU: с волосами на теле
+· char_body_shaved: English: shaved / RU: бритый(ая)
+· char_body_painted_toenails: English: with painted toenails / RU: с накрашенными ногтями на ногах
+
+9.7. Окружение (Environments)
+
+· env_bedroom: English: inside a cozy bedroom / RU: в уютной спальне
+· env_bathroom: English: inside a modern bathroom / RU: в современной ванной
+· env_living_room: English: inside a spacious living room / RU: в просторной гостиной
+· env_kitchen: English: inside a clean kitchen / RU: в чистой кухне
+· env_office: English: inside a professional office / RU: в профессиональном офисе
+· env_hotel_room: English: inside a luxurious hotel room / RU: в роскошном номере отеля
+· env_outdoor_street: English: on a busy city street / RU: на оживлённой городской улице
+· env_beach: English: on a sunny beach / RU: на солнечном пляже
+· env_forest: English: inside a dense forest / RU: в густом лесу
+· env_park: English: in a quiet park / RU: в тихом парке
+· env_nightclub: English: inside a vibrant nightclub / RU: в оживлённом ночном клубе
+· env_poolside: English: by the poolside / RU: у бассейна
+· env_gym: English: inside a gym / RU: в тренажёрном зале
+· env_luxury_suite: English: inside a luxurious suite / RU: в роскошном люксе
+· env_abandoned_building: English: inside an abandoned building / RU: в заброшенном здании
+· env_cave: English: inside a dark cave / RU: в тёмной пещере
+· env_art_studio: English: inside a bright art studio / RU: в светлой художественной студии
+· env_bar: English: inside a dimly lit bar / RU: в тускло освещённом баре
+
+9.8. Освещение (Lighting)
+
+· light_soft: English: soft lighting / RU: мягкое освещение
+· light_hard: English: hard lighting / RU: жёсткое освещение
+· light_dim: English: dim lighting / RU: тусклое освещение
+· light_spotlight: English: spotlight / RU: точечный свет
+· light_ambient: English: ambient light / RU: общее освещение
+· light_backlighting: English: backlighting / RU: контровой свет
+· light_neon: English: neon/colored lighting / RU: неоновое/цветное освещение
+· light_fluorescent: English: fluorescent light / RU: флуоресцентный свет
+· light_candle: English: candlelight / RU: свечной свет
+· light_sunset: English: sunset light / RU: свет заката
+
+Интенсивность (Intensity)
+
+· light_intensity_low: English: with low intensity / RU: низкая интенсивность
+· light_intensity_medium: English: with medium intensity / RU: средняя интенсивность
+· light_intensity_high: English: with high intensity / RU: высокая интенсивность
+
+9.9. Атмосфера (Atmosphere)
+
+· atm_intimate: English: intimate atmosphere / RU: интимная атмосфера
+· atm_sensual: English: sensual atmosphere / RU: чувственная атмосфера
+· atm_dominant: English: dominant/submissive atmosphere / RU: доминирующая/подчинённая атмосфера
+· atm_playful: English: playful atmosphere / RU: игривая атмосфера
+· atm_dark: English: dark atmosphere / RU: тёмная атмосфера
+· atm_erotic: English: erotic atmosphere / RU: эротическая атмосфера
+· atm_romantic: English: romantic atmosphere / RU: романтическая атмосфера
+· atm_tense: English: tense atmosphere / RU: напряжённая атмосфера
+
+9.10. Стиль изображения (Image Style)
+
+· style_realistic: English: realistic style / RU: реалистичный стиль
+· style_photorealistic: English: photorealistic style / RU: фотореалистичный стиль
+· style_artistic: English: artistic style / RU: художественный стиль
+· style_cartoonish: English: cartoonish style / RU: мультяшный стиль
+· style_surreal: English: surreal style / RU: сюрреалистичный стиль
+· style_vintage: English: vintage style / RU: винтажный стиль
+· style_cyberpunk: English: cyberpunk style / RU: киберпанк стиль
+· style_minimalistic: English: minimalistic style / RU: минималистичный стиль
+· style_fantasy: English: fantasy style / RU: фэнтезийный стиль
+
+9.11. Эффекты камеры (Camera Effects)
+
+· cam_effect_dof_shallow: English: shallow depth of field / RU: малая глубина резкости
+· cam_effect_dof_deep: English: deep depth of field / RU: большая глубина резкости
+· cam_effect_lens_flare_strong: English: strong lens flare / RU: сильный блик объектива
+· cam_effect_lens_flare_subtle: English: subtle lens flare / RU: лёгкий блик объектива
+· cam_effect_motion_blur_strong: English: strong motion blur / RU: сильное размытие движения
+· cam_effect_motion_blur_subtle: English: subtle motion blur / RU: лёгкое размытие движения
+· cam_effect_vignette_strong: English: strong vignette / RU: сильное виньетирование
+· cam_effect_vignette_subtle: English: subtle vignette / RU: лёгкое виньетирование
+· cam_effect_bokeh_strong: English: strong bokeh effect / RU: сильный эффект боке
+· cam_effect_bokeh_soft: English: soft bokeh effect / RU: мягкий эффект боке
+· cam_effect_focus_soft: English: soft focus / RU: мягкий фокус
+· cam_effect_focus_sharp: English: sharp focus / RU: резкий фокус
+
+9.12. Ракурсы и параметры камеры (Camera Angles & Parameters)
+
+Угол съемки (Shot Angle)
+
+· cam_angle_low: English: shot from a low angle, looking up / RU: кадр с нижнего ракурса
+· cam_angle_high: English: shot from a high angle, looking down / RU: кадр с верхнего ракурса
+· cam_angle_eye_level: English: shot at eye level / RU: кадр на уровне глаз
+· cam_angle_dutch: English: dutch angle, tilted frame / RU: голландский угол
+
+Дистанция / План (Shot Distance)
+
+· cam_dist_extreme_closeup: English: extreme close-up / RU: сверхкрупный план
+· cam_dist_closeup: English: close-up / RU: крупный план
+· cam_dist_medium: English: medium shot / RU: средний план
+· cam_dist_full: English: full body shot / RU: общий план (во весь рост)
+· cam_dist_wide: English: wide shot / RU: широкий план
+
+Точка фокуса (Focus Point)
+
+· cam_focus_face: English: focus on the face / RU: фокус на лице
+· cam_focus_eyes: English: focus on the eyes / RU: фокус на глазах
+· cam_focus_mouth: English: focus on the mouth / RU: фокус на рте
+· cam_focus_breasts: English: focus on the breasts / RU: фокус на груди
+· cam_focus_genitals: English: focus on the genitals / RU: фокус на гениталиях
+· cam_focus_feet: English: focus on the feet / RU: фокус на стопах
+· cam_focus_interaction: English: focus on the interaction / RU: фокус на взаимодействии
+· cam_focus_body: English: focus on the body / RU: фокус на теле
+
+Поле зрения (Field of View – FOV)
+
+· cam_fov_narrow: English: with a narrow field of view / RU: узкое поле зрения
+· cam_fov_normal: English: with a normal field of view / RU: обычное поле зрения
+· cam_fov_wide: English: with a wide field of view / RU: широкое поле зрения
+
+
+Итог: Приложение теперь содержит все опции из исходных списков ТЗ V1 и файла с опциями, включая упущенные ранее разделы (Sexual Body Expression, расширенные действия, позы, фетиши, выражения лица, жидкости, одежду, окружение, освещение, атмосферу, стили, эффекты камеры и ракурсы). Структура готова для реализации в модели данных generatorData.
+
