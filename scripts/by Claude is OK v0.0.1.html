@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELORIA - AI Image Generator</title>
+    <style>
+        :root {
+            --bg-primary: #0A0A0F;
+            --bg-secondary: #1A1A24;
+            --text-primary: #E0E0E0;
+            --text-secondary: #AAAAAA;
+            --accent-purple: #9D4EDD;
+            --accent-gold: #FFB347;
+            --border-color: #2D2D3D;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-primary); color: var(--text-primary); width: 100%; height: 100%; overflow: hidden; }
+        .container { display: flex; width: 100%; height: 100%; gap: 1px; background: var(--border-color); }
+        .panel { overflow-y: auto; overflow-x: hidden; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .panel-left { flex: 0 0 55%; background: var(--bg-primary); }
+        .panel-right { flex: 0 0 45%; background: var(--bg-secondary); margin: 8px; display: flex; flex-direction: column; min-height: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: var(--accent-purple); font-size: 1rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
+        .accordion { border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-secondary); flex-shrink: 0; margin-bottom: 4px; }
+        .accordion-header { padding: 8px 10px; background: var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; user-select: none; font-weight: 500; }
+        .accordion-header:hover { background: #3D3D4D; }
+        .accordion-header.active { background: var(--accent-purple); color: white; }
+        .accordion-icon { transition: transform 0.2s; font-size: 0.7rem; }
+        .accordion-header.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.2s ease; }
+        .accordion-content.active { max-height: 3000px; padding: 8px; }
+        .control-group { margin-bottom: 6px; }
+        label { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 2px; font-weight: 500; }
+        select, input, textarea { width: 100%; padding: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 4px; font-size: 0.75rem; font-family: inherit; }
+        select:focus, input:focus { outline: none; border-color: var(--accent-purple); }
+        input[type="checkbox"] { margin-right: 6px; transform: scale(1.1); }
+        .checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 0.75rem; }
+        .gallery { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; min-height: 0; padding: 4px; }
+        .gallery-item { border-radius: 6px; overflow: hidden; border: 2px solid var(--border-color); cursor: pointer; flex-shrink: 0; max-height: 180px; }
+        .gallery-item:hover { border-color: var(--accent-purple); }
+        .gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        .btn-generate { background: linear-gradient(135deg, var(--accent-gold), #CC5500); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; margin-top: 4px; }
+        .btn-generate:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,179,71,0.3); }
+        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+        .prompt-display { background: var(--bg-primary); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; font-size: 0.65rem; color: var(--text-secondary); max-height: 60px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; line-height: 1.3; }
+        textarea { resize: vertical; min-height: 60px; font-size: 0.7rem; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 12px; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-secondary); border-radius: 8px; padding: 12px; max-width: 90vw; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
+        .modal-image { width: 100%; border-radius: 6px; margin-bottom: 10px; }
+        .modal-buttons { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+        button { padding: 6px 10px; background: var(--accent-purple); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
+        button:hover { background: #B565FF; }
+        .empty-state { text-align: center; color: var(--text-secondary); padding: 20px 10px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel panel-left">
+            <h1>✨ VELORIA</h1>
+            <div class="accordion">
+                <div class="accordion-header active"><span>🎬 Scene Mode</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <label>Mode:</label>
+                    <select id="scene-mode" onchange="updateUI()"><option value="primary">Primary Action</option><option value="fetish">Fetish Focus</option><option value="composite">Composite</option></select>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header active"><span>👥 Characters</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <label>Count:</label>
+                    <select id="count" onchange="updateUI()"><option value="solo">Solo</option><option value="couple">Couple</option></select>
+                    <label style="margin-top:4px;"><input type="checkbox" id="fpv" onchange="updateUI()"> First Person View</label>
+                    <div id="fpv-group" style="display:none; margin-top:4px;"><label>FPV Gender:</label><select id="fpv-gender"><option value="">Unspecified</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select></div>
+                    <div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
+                        <div style="font-size:0.75rem; color:var(--accent-purple); margin-bottom:6px;">Character 1:</div>
+                        <select id="gender-1" onchange="updateUI()"><option value="">Gender</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select>
+                        <select id="age-1" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Age</option><option value="18_21">18-21</option><option value="21_27">21-27</option><option value="27_35">27-35</option><option value="35_42">35-42</option><option value="42_plus">42+</option></select>
+                        <select id="body-1" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Body Type</option><option value="slim">Slim</option><option value="athletic">Athletic</option><option value="curvy">Curvy</option><option value="thick">Thick</option><option value="petite">Petite</option><option value="voluptuous">Voluptuous</option><option value="muscular">Muscular</option><option value="tall_lean">Tall Lean</option></select>
+                        <select id="breast-1" onchange="updatePrompt()" style="margin-top:4px; display:none;"><option value="">Breast Size</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+                        <select id="penis-1" onchange="updatePrompt()" style="margin-top:4px; display:none;"><option value="">Penis Size</option><option value="small">Small</option><option value="average">Average</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+                        <select id="skin-1" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Skin</option><option value="smooth">Smooth</option><option value="pale">Pale</option><option value="tan">Tan</option><option value="dark">Dark</option><option value="freckles">Freckles</option></select>
+                    </div>
+                    <div id="char-2" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
+                        <div style="font-size:0.75rem; color:var(--accent-purple); margin-bottom:6px;">Character 2:</div>
+                        <select id="gender-2" onchange="updateUI()"><option value="">Gender</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select>
+                        <select id="age-2" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Age</option><option value="18_21">18-21</option><option value="21_27">21-27</option><option value="27_35">27-35</option><option value="35_42">35-42</option><option value="42_plus">42+</option></select>
+                        <select id="body-2" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Body Type</option><option value="slim">Slim</option><option value="athletic">Athletic</option><option value="curvy">Curvy</option><option value="thick">Thick</option><option value="petite">Petite</option><option value="voluptuous">Voluptuous</option><option value="muscular">Muscular</option><option value="tall_lean">Tall Lean</option></select>
+                        <select id="breast-2" onchange="updatePrompt()" style="margin-top:4px; display:none;"><option value="">Breast Size</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+                        <select id="penis-2" onchange="updatePrompt()" style="margin-top:4px; display:none;"><option value="">Penis Size</option><option value="small">Small</option><option value="average">Average</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+                        <select id="skin-2" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Skin</option><option value="smooth">Smooth</option><option value="pale">Pale</option><option value="tan">Tan</option><option value="dark">Dark</option><option value="freckles">Freckles</option></select>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header active"><span>⚡ Action & Pose</span><span class="accordion-icon">▲</span></div>
+                <div class="accordion-content active">
+                    <select id="action" onchange="updateUI()"><option value="">Select Action</option><option value="oral_male">Sucking Penis</option><option value="oral_female">Licking Pussy</option><option value="oral_deepthroat">Deepthroating</option><option value="vaginal">Vaginal Sex</option><option value="anal">Anal Sex</option><option value="fingering">Fingering</option><option value="handjob">Handjob</option><option value="footjob">Footjob</option><option value="kissing">Passionate Kissing</option><option value="stripping">Stripping</option><option value="feet_worship">Feet Worship</option><option value="spanking">Spanking</option><option value="bondage">Bondage</option></select>
+                    <select id="pose" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Select Pose</option><option value="kneeling">Kneeling</option><option value="lying_back">Lying on Back</option><option value="lying_stomach">Lying on Stomach</option><option value="sitting_lap">Sitting on Lap</option><option value="standing">Standing</option><option value="missionary">Missionary</option><option value="doggy">Doggy Style</option><option value="cowgirl">Cowgirl</option><option value="reverse_cowgirl">Reverse Cowgirl</option><option value="spooning">Spooning</option><option value="bent_over">Bent Over</option></select>
+                    <select id="environment" onchange="updatePrompt()" style="margin-top:4px;"><option value="">Location</option><option value="bedroom">Bedroom</option><option value="bathroom">Bathroom</option><option value="living_room">Living Room</option><option value="office">Office</option><option value="hotel">Hotel</option><option value="kitchen">Kitchen</option><option value="outdoor">Outdoor</option><option value="beach">Beach</option><option value="pool">Pool</option></select>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header"><span>🎨 Style & Effects</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <label>Lighting:</label>
+                    <select id="lighting" onchange="updatePrompt()"><option value="">Select</option><option value="soft">Soft</option><option value="dim">Dim</option><option value="natural">Natural</option><option value="dramatic">Dramatic</option></select>
+                    <label style="margin-top:4px;">Atmosphere:</label>
+                    <select id="atmosphere" onchange="updatePrompt()"><option value="">Select</option><option value="intimate">Intimate</option><option value="sensual">Sensual</option><option value="playful">Playful</option><option value="passionate">Passionate</option><option value="romantic">Romantic</option></select>
+                    <label style="margin-top:4px;">Image Style:</label>
+                    <select id="style" onchange="updatePrompt()"><option value="photorealistic">Photorealistic</option><option value="realistic">Realistic</option><option value="artistic">Artistic</option><option value="cinematic">Cinematic</option></select>
+                    <label style="margin-top:4px;">Camera Angle:</label>
+                    <select id="angle" onchange="updatePrompt()"><option value="">Select</option><option value="low">Low Angle</option><option value="high">High Angle</option><option value="eye_level">Eye Level</option></select>
+                    <label style="margin-top:4px;">Focus:</label>
+                    <select id="focus" onchange="updatePrompt()"><option value="">Select</option><option value="face">Face</option><option value="eyes">Eyes</option><option value="mouth">Mouth</option><option value="breasts">Breasts</option><option value="body">Full Body</option></select>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header"><span>⚙️ Technical</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <label>Resolution:</label>
+                    <select id="resolution"><option value="768x768">768×768</option><option value="512x768">512×768</option><option value="768x512">768×512</option><option value="512x512">512×512</option></select>
+                    <label style="margin-top:4px;">Guidance Scale:</label>
+                    <input type="number" id="guidance" value="7" min="1" max="20" step="0.5">
+                    <label style="margin-top:4px;">Seed:</label>
+                    <input type="text" id="seed" placeholder="Random">
+                    <label style="margin-top:4px;">Batch:</label>
+                    <select id="batch"><option value="1">1</option><option value="2">2</option><option value="4">4</option></select>
+                </div>
+            </div>
+            <div class="accordion">
+                <div class="accordion-header"><span>📝 Prompt</span><span class="accordion-icon">▼</span></div>
+                <div class="accordion-content">
+                    <div id="prompt-display" class="prompt-display">Building prompt...</div>
+                    <textarea id="prompt-edit" style="display:none; margin-top:6px;"></textarea>
+                    <label style="margin-top:4px;"><input type="checkbox" id="advanced-toggle" onchange="toggleAdvanced()"> Advanced Mode</label>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-right">
+            <div class="gallery" id="gallery"><div class="empty-state">Ready to create...</div></div>
+            <button class="btn-generate" id="generate-btn" onclick="generateImage()">GENERATE</button>
+        </div>
+    </div>
+    <div id="modal" class="modal" onclick="if(event.target===this) closeModal()">
+        <div class="modal-content">
+            <img id="modal-img" class="modal-image" src="">
+            <div style="font-size:0.7rem; color:var(--text-secondary); line-height:1.4;">
+                <strong style="color:var(--accent-purple);">Prompt:</strong>
+                <div id="modal-prompt" style="margin-bottom:8px; white-space:pre-wrap; word-break:break-word;"></div>
+            </div>
+            <div id="modal-info" style="font-size:0.65rem; color:var(--text-secondary); margin-bottom:8px;"></div>
+            <div class="modal-buttons">
+                <button onclick="closeModal()">Close</button>
+                <button onclick="copyPrompt()">Copy Prompt</button>
+            </div>
+        </div>
+    </div>
+    <script>
+const DATA = {
+    genderMap: { woman: 'a woman', man: 'a man', shemale: 'a shemale' },
+    ageMap: { '18_21': [18,21], '21_27': [21,27], '27_35': [27,35], '35_42': [35,42], '42_plus': [42,60] },
+    bodyMap: { slim: 'slim body', athletic: 'athletic build', curvy: 'curvy', thick: 'thick body', petite: 'petite frame', voluptuous: 'voluptuous figure', muscular: 'muscular', tall_lean: 'tall and lean' },
+    breastMap: { small: 'small breasts', medium: 'medium breasts', large: 'large breasts', very_large: 'very large breasts' },
+    penisMap: { small: 'small penis', average: 'average penis', large: 'large penis', very_large: 'very large penis' },
+    skinMap: { smooth: 'smooth skin', pale: 'pale skin', tan: 'tan skin', dark: 'dark skin', freckles: 'freckles' },
+    actionMap: { oral_male: 'sucking {target}\'s penis', oral_female: 'licking {target}\'s pussy', oral_deepthroat: 'deepthroating {target}\'s penis', vaginal: 'having vaginal sex with {target}', anal: 'having anal sex with {target}', fingering: 'fingering {target}', handjob: 'giving handjob to {target}', footjob: 'giving footjob to {target}', kissing: 'kissing {target} passionately', stripping: 'stripping slowly', feet_worship: 'worshipping {target}\'s feet', spanking: 'spanking {target}', bondage: 'restraining {target}' },
+    poseMap: { kneeling: 'kneeling', lying_back: 'lying on back', lying_stomach: 'lying on stomach', sitting_lap: 'sitting on lap', standing: 'standing', missionary: 'missionary position', doggy: 'doggy style', cowgirl: 'cowgirl position', reverse_cowgirl: 'reverse cowgirl', spooning: 'spooning', bent_over: 'bent over' },
+    envMap: { bedroom: 'inside a cozy bedroom', bathroom: 'in a modern bathroom', living_room: 'in a spacious living room', office: 'in a professional office', hotel: 'in a luxurious hotel room', kitchen: 'in a clean kitchen', outdoor: 'outdoors on a city street', beach: 'on a sunny beach', pool: 'by a swimming pool' },
+    lightingMap: { soft: 'soft lighting', dim: 'dim lighting', natural: 'natural lighting', dramatic: 'dramatic lighting' },
+    atmosphereMap: { intimate: 'intimate', sensual: 'sensual', playful: 'playful', passionate: 'passionate', romantic: 'romantic' },
+    styleMap: { photorealistic: 'photorealistic, 8k, highly detailed, sharp focus', realistic: 'realistic, 4k, well-defined', artistic: 'artistic, beautifully painted', cinematic: 'cinematic, professional color grading' },
+    compatibility: { oral_male: ['kneeling', 'lying_back', 'sitting_lap', 'standing'], oral_female: ['kneeling', 'lying_back', 'sitting_lap', 'standing'], oral_deepthroat: ['kneeling', 'sitting_lap', 'standing'], vaginal: ['missionary', 'doggy', 'cowgirl', 'reverse_cowgirl', 'spooning', 'bent_over'], anal: ['doggy', 'missionary', 'bent_over', 'cowgirl'], fingering: ['lying_back', 'kneeling', 'sitting_lap'], handjob: ['sitting_lap', 'standing', 'lying_back'], footjob: ['lying_back', 'standing'], kissing: ['standing', 'sitting_lap', 'lying_back', 'missionary', 'spooning'], stripping: ['standing', 'sitting_lap'], feet_worship: ['kneeling', 'lying_back'], spanking: ['bent_over', 'standing', 'doggy'], bondage: ['kneeling', 'bent_over', 'standing'] }
+};
+let currentPrompt = '';
+let isGenerating = false;
+function updateUI() {
+    const fpv = document.getElementById('fpv').checked;
+    const count = document.getElementById('count').value;
+    document.getElementById('fpv-group').style.display = fpv ? 'block' : 'none';
+    document.getElementById('char-2').style.display = count === 'couple' && !fpv ? 'block' : 'none';
+    updateGenderDisplay(1);
+    if(count === 'couple') updateGenderDisplay(2);
+    updatePoseOptions();
+    updatePrompt();
+}
+function updateGenderDisplay(n) {
+    const g = document.getElementById(`gender-${n}`).value;
+    const b = document.getElementById(`breast-${n}`);
+    const p = document.getElementById(`penis-${n}`);
+    if(g === 'woman') { b.style.display = 'block'; p.style.display = 'none'; }
+    else if(g === 'man') { b.style.display = 'none'; p.style.display = 'block'; }
+    else if(g === 'shemale') { b.style.display = 'block'; p.style.display = 'block'; }
+    else { b.style.display = 'none'; p.style.display = 'none'; }
+}
+function updatePoseOptions() {
+    const action = document.getElementById('action').value;
+    const poses = DATA.compatibility[action] || [];
+    const opts = document.getElementById('pose').options;
+    for(let i=0; i<opts.length; i++) {
+        if(!opts[i].value) continue;
+        opts[i].disabled = !poses.includes(opts[i].value);
+        opts[i].style.opacity = opts[i].disabled ? '0.4' : '1';
+    }
+}
+function getAge(ageId) {
+    const range = DATA.ageMap[ageId];
+    if(range) return Math.floor(Math.random()*(range[1]-range[0]+1))+range[0];
+    return '';
+}
+function getCharDesc(n) {
+    const g = document.getElementById(`gender-${n}`).value;
+    if(!g) return '';
+    const a = getAge(document.getElementById(`age-${n}`).value);
+    const b = document.getElementById(`body-${n}`).value;
+    const br = document.getElementById(`breast-${n}`).value;
+    const p = document.getElementById(`penis-${n}`).value;
+    const s = document.getElementById(`skin-${n}`).value;
+    let desc = a ? `${a} year old ${DATA.genderMap[g]}` : DATA.genderMap[g];
+    if(b) desc += ` with ${DATA.bodyMap[b]}`;
+    if(br && DATA.breastMap[br]) desc += `, ${DATA.breastMap[br]}`;
+    if(p && DATA.penisMap[p]) desc += `, ${DATA.penisMap[p]}`;
+    if(s && DATA.skinMap[s]) desc += `, ${DATA.skinMap[s]}`;
+    return desc;
+}
+function buildPrompt() {
+    let p = '';
+    const fpv = document.getElementById('fpv').checked;
+    const count = document.getElementById('count').value;
+    if(fpv) p += 'From the viewer\'s perspective, ';
+    const c1 = getCharDesc(1);
+    if(c1) p += c1;
+    if(count === 'couple' && !fpv) {
+        const c2 = getCharDesc(2);
+        if(c2) p += ` and ${c2}`;
+    }
+    const action = document.getElementById('action').value;
+    if(action && DATA.actionMap[action]) {
+        const target = fpv ? 'the viewer' : 'each other';
+        p += ` is ${DATA.actionMap[action].replace('{target}', target)}`;
+    }
+    const pose = document.getElementById('pose').value;
+    if(pose && DATA.poseMap[pose]) p += `, ${DATA.poseMap[pose]}`;
+    const env = document.getElementById('environment').value;
+    if(env && DATA.envMap[env]) p += `, ${DATA.envMap[env]}`;
+    p += '. ';
+    const atm = document.getElementById('atmosphere').value;
+    if(atm && DATA.atmosphereMap[atm]) p += `${DATA.atmosphereMap[atm]} atmosphere, `;
+    const light = document.getElementById('lighting').value;
+    if(light && DATA.lightingMap[light]) p += `${DATA.lightingMap[light]}, `;
+    const angle = document.getElementById('angle').value;
+    if(angle) {
+        const angles = { low: 'shot from low angle', high: 'shot from high angle', eye_level: 'eye level shot' };
+        if(angles[angle]) p += `${angles[angle]}, `;
+    }
+    const focus = document.getElementById('focus').value;
+    if(focus) {
+        const focuses = { face: 'focus on face', eyes: 'focus on eyes', mouth: 'focus on mouth', breasts: 'focus on breasts', body: 'full body focus' };
+        if(focuses[focus]) p += `${focuses[focus]}, `;
+    }
+    const style = document.getElementById('style').value || 'photorealistic';
+    p += `${DATA.styleMap[style]}, aesthetic, masterpiece, highly detailed, realistic anatomy, accurate proportions, standard fingers and toes, five fingers on each hand, five toes on each foot, two arms, two legs.`;
+    return p;
+}
+function updatePrompt() {
+    currentPrompt = buildPrompt();
+    document.getElementById('prompt-display').textContent = currentPrompt;
+    if(document.getElementById('advanced-toggle').checked) document.getElementById('prompt-edit').value = currentPrompt;
+}
+function toggleAdvanced() {
+    const checked = document.getElementById('advanced-toggle').checked;
+    document.getElementById('prompt-edit').style.display = checked ? 'block' : 'none';
+    if(checked) document.getElementById('prompt-edit').value = currentPrompt;
+}
+async function generateImage() {
+    if(isGenerating) return;
+    isGenerating = true;
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating...';
+    try {
+        const prompt = document.getElementById('advanced-toggle').checked ? document.getElementById('prompt-edit').value : currentPrompt;
+        const res = document.getElementById('resolution').value;
+        const [w, h] = res.split('x').map(Number);
+        const guidance = parseFloat(document.getElementById('guidance').value);
+        const batch = parseInt(document.getElementById('batch').value);
+        let seed = document.getElementById('seed').value;
+        const negPrompt = 'bad anatomy, deformed, mutated hands, extra digits, missing digits, distorted, low quality, blurry, cartoon, illustration, extra limbs';
+        
+        for(let i=0; i<batch; i++) {
+            const s = seed ? parseInt(seed) : -1;  // Убрал +i
+            try {
+                const result = await t2i({
+                    prompt: prompt,
+                    negativePrompt: negPrompt,
+                    width: w,
+                    height: h,
+                    guidanceScale: guidance,
+                    seed: s
+                });
+                
+                // Попробуем разные способы получить картинку
+                let imgUrl = null;
+                let usedSeed = s;
+                
+                // Способ 1: dataUrl
+                if(result && result.dataUrl) {
+                    imgUrl = result.dataUrl;
+                } 
+                // Способ 2: toString() (это может быть HTML код)
+                else if(result) {
+                    imgUrl = result.toString();
+                }
+                
+                // Если результат сам по себе строка (base64 или URL)
+                if(!imgUrl && typeof result === 'string') {
+                    imgUrl = result;
+                }
+                
+                if(result && result.inputs && result.inputs.seed) {
+                    usedSeed = result.inputs.seed;
+                }
+                
+                if(imgUrl) {
+                    addToGallery(imgUrl, prompt, usedSeed);
+                }
+            } catch(e) { 
+                alert('Error: ' + e.message);
+            }
+        }
+    } catch(e) { 
+        alert('Error: ' + e.message);
+    }
+    finally {
+        isGenerating = false;
+        btn.disabled = false;
+        btn.textContent = 'GENERATE';
+    }
+}
+function addToGallery(imgUrl, prompt, seed) {
+    const gallery = document.getElementById('gallery');
+    if(gallery.querySelector('.empty-state')) gallery.innerHTML = '';
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.onclick = () => openModal(imgUrl, prompt, seed);
+    item.appendChild(img);
+    gallery.insertBefore(item, gallery.firstChild);
+}
+function openModal(img, prompt, seed) {
+    document.getElementById('modal-img').src = img;
+    document.getElementById('modal-prompt').textContent = prompt;
+    document.getElementById('modal-info').innerHTML = `<strong>Seed:</strong> ${seed || 'Random'}<br><strong>Model:</strong> FLUX`;
+    window.currentPrompt = prompt;
+    window.currentSeed = seed;
+    document.getElementById('modal').classList.add('active');
+}
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+}
+function copyPrompt() {
+    if(window.currentPrompt) {
+        navigator.clipboard.writeText(window.currentPrompt).then(() => alert('Copied!'));
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.accordion-header').forEach(h => {
+        h.addEventListener('click', function() {
+            const c = this.nextElementSibling;
+            this.classList.toggle('active');
+            c.classList.toggle('active');
+        });
+    });
+    updatePrompt();
+});
+    </script>
+</body>
+</html>
