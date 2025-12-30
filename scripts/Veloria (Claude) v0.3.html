@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>VELORIA - Phase 3</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Cormorant+Upright:wght@300;400;500;600;700&family=Great+Vibes&family=Island+Moments&family=Italianno&display=swap" rel="stylesheet">
+	<style>
+:root {
+		--bg-primary: #0A0A0F;
+		--bg-secondary: #1A1A24;
+		--text-primary: #E0E0E0;
+		--text-secondary: #AAAAAA;
+		--accent-purple: #9D4EDD;
+		--accent-gold: #FFB347;
+		--border-color: #2D2D3D;
+		--font-veloria: "Beau Rivage", cursive;
+		--font-subtitle: "Island Moments", cursive;
+		--font-gallery: "Italianno", cursive;
+		--font-accordion: "Great Vibes", cursive;
+		--font-body: "Cormorant Upright", serif;
+	}
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: var(--font-body);
+		}
+		html, body {
+			background: var(--bg-primary);
+			color: var(--text-primary);
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.container {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			gap: 1px;
+			background: var(--border-color);
+		}
+		.panel {
+			overflow-y: auto;
+			overflow-x: hidden;
+			padding: 12px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+		.panel-left {
+			flex: 0 0 55%;
+			background: var(--bg-primary);
+			position: relative;
+		}
+		.panel-left::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 180px;
+			background-image: url('https://github.com/era100oss/Veloria/blob/main/topBackgroundVeloria.jpg?raw=true');
+			background-size: cover;
+			background-position: top center;
+			background-repeat: no-repeat;
+			pointer-events: none;
+			z-index: 0;
+		}
+		.panel-left > * {
+			position: relative;
+			z-index: 1;
+		}
+		.panel-right {
+			flex: 0 0 45%;
+			background: var(--bg-secondary);
+			margin: 8px;
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
+			box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+		}
+		h1 {
+			font-family: var(--font-veloria);
+			text-align: center;
+			color: var(--accent-gold);
+			font-size: 2.5rem;
+			margin-bottom: 2px;
+			letter-spacing: 2px;
+			flex-shrink: 0;
+			font-weight: 400;
+			text-shadow: 0 0 20px rgba(157,78,221,0.4);
+		}
+		.subtitle {
+			font-family: var(--font-subtitle);
+			text-align: center;
+			color: var(--accent-gold);
+			font-size: 0.9rem;
+			margin-bottom: 16px;
+			letter-spacing: 1px;
+			flex-shrink: 0;
+		}
+		.gallery-title {
+			font-family: var(--font-gallery);
+			text-align: center;
+			color: var(--accent-gold);
+			font-size: 1.8rem;
+			margin-bottom: 8px;
+			flex-shrink: 0;
+			text-shadow: 0 0 15px rgba(157,78,221,0.3);
+		}
+		.accordion {
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+			overflow: hidden;
+			background: var(--bg-secondary);
+			flex-shrink: 0;
+			margin-bottom: 4px;
+		}
+		.accordion-header {
+			padding: 8px 10px;
+			background: var(--border-color);
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.9rem;
+			user-select: none;
+			font-weight: 600;
+			font-family: var(--font-accordion);
+			color: var(--accent-gold);
+			text-shadow: 0 0 10px rgba(157,78,221,0.2);
+			transition: all 0.2s;
+		}
+		.accordion-header:hover {
+			background: #3D3D4D;
+			text-shadow: 0 0 15px rgba(157,78,221,0.4);
+		}
+		.accordion-header.active {
+			background: var(--accent-purple);
+			color: white;
+			text-shadow: 0 0 15px rgba(255,179,71,0.3);
+		}
+		.accordion-icon {
+			transition: transform 0.2s;
+			font-size: 0.7rem;
+		}
+		.accordion-header.active .accordion-icon {
+			transform: rotate(180deg);
+		}
+		.accordion-content {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.2s ease;
+		}
+		.accordion-content.active {
+			max-height: 3000px;
+			padding: 8px;
+		}
+		label {
+			font-family: var(--font-body);
+			display: block;
+			font-size: 0.75rem;
+			color: var(--text-secondary);
+			margin-bottom: 2px;
+			font-weight: 600;
+		}
+		select, input, textarea {
+			width: 100%;
+			padding: 6px;
+			background: var(--bg-primary);
+			border: 1px solid var(--border-color);
+			color: var(--text-primary);
+			border-radius: 4px;
+			font-size: 0.75rem;
+			font-family: inherit;
+			margin-bottom: 4px;
+		}
+		select:focus, input:focus {
+			outline: none;
+			border-color: var(--accent-purple);
+		}
+		input[type="checkbox"] {
+			margin-right: 6px;
+			transform: scale(1.1);
+			cursor: pointer;
+		}
+		input[type="range"] {
+			width: 100%;
+			cursor: pointer;
+			accent-color: var(--accent-gold);
+		}
+		.checkbox-label {
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+			font-size: 0.75rem;
+		}
+		.action-group-title {
+			font-size: 0.7rem;
+			color: var(--accent-purple);
+			font-weight: 700;
+			margin-top: 6px;
+			margin-bottom: 4px;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+		.action-item {
+			display: flex;
+			align-items: flex-start;
+			margin-bottom: 6px;
+			font-size: 0.7rem;
+			gap: 6px;
+		}
+		.action-item input[type="checkbox"] {
+			flex-shrink: 0;
+			margin-top: 2px;
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+		}
+		.action-item label {
+			margin: 0;
+			cursor: pointer;
+			flex: 1;
+		}
+		.gallery {
+			flex: 1;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			min-height: 0;
+			padding: 4px;
+		}
+		.gallery-item {
+			border-radius: 6px;
+			overflow: hidden;
+			border: 2px solid var(--border-color);
+			cursor: pointer;
+			flex-shrink: 0;
+			max-height: 180px;
+			position: relative;
+			transition: all 0.2s;
+		}
+		.gallery-item:hover {
+			border-color: var(--accent-purple);
+			box-shadow: 0 0 15px rgba(157,78,221,0.3);
+		}
+		.gallery-item img {
+			width: 100%;
+			height: 160px;
+			object-fit: cover;
+			display: block;
+		}
+		.gallery-btn {
+			position: absolute;
+			top: 4px;
+			right: 4px;
+			background: rgba(0,0,0,0.7);
+			color: white;
+			border: none;
+			padding: 4px 8px;
+			border-radius: 4px;
+			font-size: 0.65rem;
+			cursor: pointer;
+		}
+		.gallery-btn:hover {
+			background: rgba(0,0,0,0.9);
+		}
+		.btn-generate {
+			background: linear-gradient(135deg, var(--accent-gold), #CC5500);
+			color: white;
+			border: none;
+			padding: 10px;
+			border-radius: 6px;
+			font-size: 0.85rem;
+			font-weight: 600;
+			cursor: pointer;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			flex-shrink: 0;
+			margin-top: 4px;
+			box-shadow: 0 0 20px rgba(255,179,71,0.3);
+			transition: all 0.2s;
+		}
+		.btn-generate:hover:not(:disabled) {
+			transform: translateY(-2px);
+			box-shadow: 0 0 30px rgba(255,179,71,0.5);
+		}
+		.btn-generate:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+		textarea {
+			resize: vertical;
+			min-height: 200px;
+			font-size: 0.7rem;
+		}
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0,0,0,0.95);
+			z-index: 1000;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 12px;
+			overflow-y: auto;
+			animation: fadeIn 0.3s ease;
+		}
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
+		.modal.active {
+			display: flex;
+		}
+		.modal-content {
+			background: var(--bg-secondary);
+			border-radius: 8px;
+			padding: 12px;
+			max-width: 90vw;
+			max-height: 85vh;
+			overflow-y: auto;
+			border: 2px solid var(--accent-purple);
+			animation: slideUp 0.3s ease;
+			position: relative;
+		}
+		@keyframes slideUp {
+			from { transform: translateY(30px); opacity: 0; }
+			to { transform: translateY(0); opacity: 1; }
+		}
+		.modal-image {
+			width: 100%;
+			border-radius: 6px;
+			margin-bottom: 10px;
+		}
+		.modal-counter {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background: rgba(157,78,221,0.7);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 4px;
+			font-size: 0.7rem;
+			font-weight: 600;
+		}
+		.modal-nav {
+			position: absolute;
+			top: 50%;
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			padding: 0 10px;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+		.modal-nav button {
+			pointer-events: all;
+			background: rgba(157,78,221,0.6);
+			color: white;
+			border: none;
+			padding: 10px 15px;
+			font-size: 1.2rem;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: all 0.2s;
+		}
+		.modal-nav button:hover {
+			background: rgba(157,78,221,0.9);
+			box-shadow: 0 0 15px rgba(157,78,221,0.5);
+		}
+		.modal-buttons {
+			display: flex;
+			gap: 6px;
+			margin-top: 10px;
+			flex-wrap: wrap;
+		}
+		button {
+			padding: 6px 10px;
+			background: var(--accent-purple);
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 0.7rem;
+			transition: all 0.2s;
+			box-shadow: 0 0 10px rgba(157,78,221,0.2);
+		}
+		button:hover {
+			background: #B565FF;
+			box-shadow: 0 0 15px rgba(157,78,221,0.4);
+		}
+		.empty-state {
+			text-align: center;
+			color: var(--text-secondary);
+			padding: 20px 10px;
+			font-size: 0.8rem;
+		}
+		.char-title {
+			font-size: 0.75rem;
+			color: var(--accent-purple);
+			margin: 6px 0;
+			font-weight: 600;
+		}
+		.fs-btn {
+			position: fixed;
+			top: 8px;
+			left: 8px;
+			width: 18px;
+			height: 18px;
+			background: rgba(157,78,221,0.15);
+			color: white;
+			border: 3px solid var(--accent-purple);
+			border-radius: 4px;
+			font-size: 0.7rem;
+			cursor: pointer;
+			padding: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 100;
+			transition: all 0.2s;
+			box-shadow: 0 0 10px rgba(157,78,221,0.2);
+		}
+		.fs-btn:hover {
+			box-shadow: 0 0 15px rgba(157,78,221,0.4);
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="panel panel-left">
+			<h1>Veloria</h1>
+			<div class="subtitle">Where Desire Becomes Art</div>
+
+			<div class="accordion">
+				<div class="accordion-header active">
+					<span>Scene Setup</span><span class="accordion-icon">▲</span>
+				</div>
+				<div class="accordion-content active">
+					<label>Participant Count:</label>
+					<select id="count" onchange="updateUI()"><option value="solo">Solo</option><option value="couple">Couple</option></select>
+					<label><input type="checkbox" id="fpv" onchange="updateUI()"> First Person View</label>
+					<div id="fpv-group" style="display:none;">
+						<label>FPV Gender:</label>
+						<select id="fpv-gender"><option value="">Unspecified</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select>
+						<label style="margin-top:8px;">FPV Role:</label>
+						<select id="fpv-active-char"><option value="viewer">Viewer Active</option><option value="char1">Viewer Passive</option></select>
+					</div>
+					<div id="role-group" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
+						<label>Active / Passive:</label>
+						<select id="couple-active-char"><option value="char1">Character 1 (Active)</option><option value="char2">Character 2 (Active)</option></select>
+					</div>
+					<label style="margin-top:8px;">Location:</label>
+					<select id="environment" onchange="updatePrompt()"><option value="">Select Location</option><option value="bedroom">Bedroom</option><option value="bathroom">Bathroom</option><option value="living_room">Living Room</option><option value="office">Office</option><option value="hotel">Hotel Room</option><option value="kitchen">Kitchen</option><option value="outdoor">City Street</option><option value="beach">Beach</option><option value="pool">Poolside</option></select>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header active">
+					<span>Character 1 - Body</span><span class="accordion-icon">▲</span>
+				</div>
+				<div class="accordion-content active">
+					<select id="gender-1" onchange="updateUI()"><option value="">Gender</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select>
+					<select id="age-1" onchange="updatePrompt()"><option value="">Age</option><option value="18_21">18-21</option><option value="21_27">21-27</option><option value="27_35">27-35</option><option value="35_42">35-42</option><option value="42_plus">42+</option></select>
+					<select id="body-1" onchange="updatePrompt()"><option value="">Body Type</option><option value="slim">Slim</option><option value="athletic">Athletic</option><option value="curvy">Curvy</option><option value="thick">Thick</option><option value="petite">Petite</option><option value="voluptuous">Voluptuous</option><option value="muscular">Muscular</option><option value="tall_lean">Tall Lean</option></select>
+					<select id="breast-1" onchange="updatePrompt()" style="display:none;"><option value="">Breast Size</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+					<select id="penis-1" onchange="updatePrompt()" style="display:none;"><option value="">Penis Size</option><option value="small">Small</option><option value="average">Average</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+					<select id="skin-1" onchange="updatePrompt()"><option value="">Skin</option><option value="smooth">Smooth</option><option value="pale">Pale</option><option value="tan">Tan</option><option value="dark">Dark</option><option value="freckles">Freckles</option></select>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Character 1 - Details</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<select id="expression-1" onchange="updatePrompt()"><option value="">Facial Expression</option><option value="pleasure">Pleasure</option><option value="pain">Pain</option><option value="ecstasy">Ecstasy</option><option value="seduction">Seduction</option><option value="surprise">Surprise</option><option value="fear">Fear</option><option value="desire">Desire</option></select>
+					<select id="clothing-1" onchange="updatePrompt()"><option value="">Clothing</option><option value="naked">Naked</option><option value="teacher">Teacher</option><option value="police">Police Officer</option><option value="nurse">Nurse</option><option value="maid">Maid</option><option value="heels">High Heels</option><option value="barefoot">Barefoot</option><option value="collar">Collar</option><option value="handcuffs">Handcuffs</option><option value="lingerie">Lingerie</option><option value="stockings">Stockings</option></select>
+					<select id="body-details-1" onchange="updatePrompt()"><option value="">Body Details</option><option value="tattoos">Tattoos</option><option value="piercings">Piercings</option><option value="freckles">Freckles</option><option value="body-hair">Body Hair</option><option value="shaved">Shaved</option></select>
+				</div>
+			</div>
+
+			<div id="char-2-section" style="display:none;">
+				<div class="accordion">
+					<div class="accordion-header active">
+						<span>Character 2 - Body</span><span class="accordion-icon">▲</span>
+					</div>
+					<div class="accordion-content active">
+						<select id="gender-2" onchange="updateUI()"><option value="">Gender</option><option value="woman">Woman</option><option value="man">Man</option><option value="shemale">Shemale</option></select>
+						<select id="age-2" onchange="updatePrompt()"><option value="">Age</option><option value="18_21">18-21</option><option value="21_27">21-27</option><option value="27_35">27-35</option><option value="35_42">35-42</option><option value="42_plus">42+</option></select>
+						<select id="body-2" onchange="updatePrompt()"><option value="">Body Type</option><option value="slim">Slim</option><option value="athletic">Athletic</option><option value="curvy">Curvy</option><option value="thick">Thick</option><option value="petite">Petite</option><option value="voluptuous">Voluptuous</option><option value="muscular">Muscular</option><option value="tall_lean">Tall Lean</option></select>
+						<select id="breast-2" onchange="updatePrompt()" style="display:none;"><option value="">Breast Size</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+						<select id="penis-2" onchange="updatePrompt()" style="display:none;"><option value="">Penis Size</option><option value="small">Small</option><option value="average">Average</option><option value="large">Large</option><option value="very_large">Very Large</option></select>
+						<select id="skin-2" onchange="updatePrompt()"><option value="">Skin</option><option value="smooth">Smooth</option><option value="pale">Pale</option><option value="tan">Tan</option><option value="dark">Dark</option><option value="freckles">Freckles</option></select>
+					</div>
+				</div>
+				<div class="accordion">
+					<div class="accordion-header">
+						<span>Character 2 - Details</span><span class="accordion-icon">▼</span>
+					</div>
+					<div class="accordion-content">
+						<select id="expression-2" onchange="updatePrompt()"><option value="">Facial Expression</option><option value="pleasure">Pleasure</option><option value="pain">Pain</option><option value="ecstasy">Ecstasy</option><option value="seduction">Seduction</option><option value="surprise">Surprise</option><option value="fear">Fear</option><option value="desire">Desire</option></select>
+						<select id="clothing-2" onchange="updatePrompt()"><option value="">Clothing</option><option value="naked">Naked</option><option value="teacher">Teacher</option><option value="police">Police Officer</option><option value="nurse">Nurse</option><option value="maid">Maid</option><option value="heels">High Heels</option><option value="barefoot">Barefoot</option><option value="collar">Collar</option><option value="handcuffs">Handcuffs</option><option value="lingerie">Lingerie</option><option value="stockings">Stockings</option></select>
+						<select id="body-details-2" onchange="updatePrompt()"><option value="">Body Details</option><option value="tattoos">Tattoos</option><option value="piercings">Piercings</option><option value="freckles">Freckles</option><option value="body-hair">Body Hair</option><option value="shaved">Shaved</option></select>
+					</div>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Actions</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Oral</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="actions-oral"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Penetration</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="actions-penetration"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Masturbating</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="actions-masturbating"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Fetishes</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="actions-fetishes"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Additionally</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Touch</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="modifiers-touch"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Sound</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="modifiers-sound"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>BDSM</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="modifiers-bdsm"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Visual</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="modifiers-visual"></div>
+						</div>
+					</div>
+					<div class="accordion" style="margin-bottom:4px;">
+						<div class="accordion-header" style="background:#2D2D3D; font-size:0.85rem;">
+							<span>Public</span><span class="accordion-icon">▼</span>
+						</div>
+						<div class="accordion-content">
+							<div id="modifiers-public"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Pose</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<select id="pose" onchange="updatePrompt()"><option value="">Select Pose</option><option value="kneeling">Kneeling</option><option value="lying_back">Lying on Back</option><option value="lying_stomach">Lying on Stomach</option><option value="sitting_lap">Sitting on Lap</option><option value="standing">Standing</option><option value="missionary">Missionary</option><option value="doggy">Doggy</option><option value="cowgirl">Cowgirl</option><option value="reverse_cowgirl">Reverse Cowgirl</option><option value="spooning">Spooning</option><option value="bent_over">Bent Over</option></select>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Fluids</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<div class="char-title">Character 1</div>
+					<div id="fluids-char1"></div>
+					<button onclick="addFluidRow(1)" style="width:100%; margin-top:6px; font-size:0.7rem;">+ Add Fluid</button>
+					<div id="char2-fluids" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid var(--border-color);">
+						<div class="char-title">Character 2</div>
+						<div id="fluids-char2"></div>
+						<button onclick="addFluidRow(2)" style="width:100%; margin-top:6px; font-size:0.7rem;">+ Add Fluid</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Feet Details</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<select id="feet-posture" onchange="updatePrompt()"><option value="">Posture</option><option value="pointed">Pointed Toes</option><option value="flexed">Flexed Toes</option><option value="arched">Arched</option></select>
+					<select id="feet-texture" onchange="updatePrompt()"><option value="">Texture</option><option value="smooth">Smooth</option><option value="clean">Clean</option><option value="natural">Natural</option></select>
+					<select id="nails-shape" onchange="updatePrompt()"><option value="">Nail Shape</option><option value="round">Round</option><option value="square">Square</option><option value="almond">Almond</option></select>
+					<select id="nails-color" onchange="updatePrompt()"><option value="">Nail Color</option><option value="red">Red</option><option value="black">Black</option><option value="nude">Nude</option><option value="pink">Pink</option><option value="white">White</option></select>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Style & Camera</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<label>Lighting:</label>
+					<select id="lighting" onchange="updatePrompt()"><option value="">Select</option><option value="soft">Soft</option><option value="dim">Dim</option><option value="natural">Natural</option><option value="dramatic">Dramatic</option></select>
+					<label>Atmosphere:</label>
+					<select id="atmosphere" onchange="updatePrompt()"><option value="">Select</option><option value="intimate">Intimate</option><option value="sensual">Sensual</option><option value="playful">Playful</option><option value="passionate">Passionate</option></select>
+					<label>Style:</label>
+					<select id="style" onchange="updatePrompt()"><option value="photorealistic">Photorealistic</option><option value="realistic">Realistic</option><option value="artistic">Artistic</option><option value="cinematic">Cinematic</option></select>
+					<label>Camera Angle:</label>
+					<select id="angle" onchange="updatePrompt()"><option value="">Select</option><option value="low">Low Angle</option><option value="high">High Angle</option><option value="eye_level">Eye Level</option></select>
+					<label>Focus:</label>
+					<select id="focus" onchange="updatePrompt()"><option value="">Select</option><option value="face">Face</option><option value="body">Full Body</option><option value="interaction">Interaction</option></select>
+					<label>Camera Effects:</label>
+					<select id="cam-effect" onchange="updatePrompt()"><option value="">Select</option><option value="dof">Shallow Depth of Field</option><option value="flare">Lens Flare</option><option value="blur">Motion Blur</option><option value="vignette">Vignette</option><option value="bokeh">Bokeh</option></select>
+					<label>Field of View:</label>
+					<select id="fov" onchange="updatePrompt()"><option value="">Select</option><option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Technical</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<label>Resolution:</label>
+					<select id="resolution"><option value="768x768">768×768</option><option value="512x768">512×768</option><option value="768x512">768×512</option><option value="512x512">512×512</option></select>
+					<label>Guidance Scale: <span id="guidance-val">7</span></label>
+					<input type="range" id="guidance" value="7" min="1" max="30" step="1" onchange="updateGuidance()" oninput="updateGuidance()">
+					<label>Batch: <span id="batch-val">1</span></label>
+					<input type="range" id="batch" value="1" min="1" max="10" step="1" onchange="updateBatch()" oninput="updateBatch()">
+					<label>Seed:</label>
+					<input type="text" id="seed" placeholder="Random">
+					<label>Negative Prompt:</label>
+					<textarea id="negativePrompt" style="min-height:80px; font-size:0.7rem;">ugly, deformed, bad anatomy, bad proportions, extra limbs, mutated hands, missing fingers, blurry, low quality, watermark, bad composition, distorted face, cropped, censored, low res, jpeg artifacts, poorly drawn</textarea>
+				</div>
+			</div>
+
+			<div class="accordion">
+				<div class="accordion-header">
+					<span>Prompt (Advanced)</span><span class="accordion-icon">▼</span>
+				</div>
+				<div class="accordion-content">
+					<label><input type="checkbox" id="advanced" onchange="toggleAdvanced()"> Enable Advanced Editing</label>
+					<textarea id="prompt-edit" style="display:none; margin-top:8px;"></textarea>
+					<button onclick="resetPrompt()" style="display:none; width:100%; margin-top:6px;" id="reset-btn">Reset to Settings</button>
+					<button onclick="improvePrompt()" style="display:none; width:100%; margin-top:6px;" id="improve-btn">AI Remaster</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-right">
+			<div class="gallery-title">Gallery</div>
+			<button class="fs-btn" id="fs-btn" onclick="toggleFullscreenCustom()" title="Fullscreen">⛶</button>
+			<div class="gallery" id="gallery">
+				<div class="empty-state">Ready...</div>
+			</div>
+			<button class="btn-generate" id="gen-btn" onclick="generateImage()">ECSTASY</button>
+		</div>
+	</div>
+
+	<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+		<div class="modal-content">
+			<div class="modal-counter"><span id="modal-counter">1/1</span></div>
+			<img id="modal-img" class="modal-image">
+			<div class="modal-nav">
+				<button onclick="prevImage()">&lt;</button>
+				<button onclick="nextImage()">&gt;</button>
+			</div>
+			<div style="font-size:0.7rem;">
+				<strong style="color:var(--accent-purple);">Prompt:</strong>
+				<div id="modal-prompt" style="margin-bottom:8px; white-space:pre-wrap; word-break:break-word;"></div>
+			</div>
+			<div id="modal-info" style="font-size:0.65rem;"></div>
+			<div class="modal-buttons">
+				<button onclick="closeModal()">Close</button>
+				<button onclick="copyPrompt()">Copy Prompt</button>
+				<button onclick="downloadImg()">Download</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// ============================================
+		// ИСПРАВЛЕННЫЙ КОД ВЕЛОРИИ
+		// Исправлены все ошибки, сохранена функциональность
+		// ============================================
+
+		const DATA = {
+			pronounMap: {
+				woman: { subject: 'She', object: 'her' },
+				man: { subject: 'He', object: 'his' },
+				shemale: { subject: 'She', object: 'her' }
+			},
+			reflexiveMap: {
+				woman: 'herself',
+				man: 'himself',
+				shemale: 'herself'
+			},
+			genderMap: {
+				woman: 'a woman',
+				man: 'a man',
+				shemale: 'a shemale'
+			},
+			ageMap: {
+				'18_21': [18, 21],
+				'21_27': [21, 27],
+				'27_35': [27, 35],
+				'35_42': [35, 42],
+				'42_plus': [42, 60]
+			},
+			bodyMap: {
+				slim: 'slim body',
+				athletic: 'athletic build',
+				curvy: 'curvy',
+				thick: 'thick body',
+				petite: 'petite frame',
+				voluptuous: 'voluptuous figure',
+				muscular: 'muscular',
+				tall_lean: 'tall and lean'
+			},
+			breastMap: {
+				small: 'small breasts',
+				medium: 'medium breasts',
+				large: 'large breasts',
+				very_large: 'very large breasts'
+			},
+			penisMap: {
+				small: 'small penis',
+				average: 'average penis',
+				large: 'large penis',
+				very_large: 'very large penis'
+			},
+			skinMap: {
+				smooth: 'smooth skin',
+				pale: 'pale skin',
+				tan: 'tan skin',
+				dark: 'dark skin',
+				freckles: 'with freckles'
+			},
+			expressionMap: {
+				pleasure: 'with a look of pleasure',
+				pain: 'with a pained expression',
+				ecstasy: 'with an ecstatic expression',
+				seduction: 'with a seductive look',
+				surprise: 'with a surprised expression',
+				fear: 'with a fearful expression',
+				desire: 'looking full of desire'
+			},
+			clothingMap: {
+				naked: 'naked',
+				teacher: 'dressed as a teacher',
+				police: 'dressed as a police officer',
+				nurse: 'dressed as a nurse',
+				maid: 'dressed as a maid',
+				heels: 'in high heels',
+				barefoot: 'barefoot',
+				collar: 'wearing a collar',
+				handcuffs: 'wearing handcuffs',
+				lingerie: 'in lingerie',
+				stockings: 'in stockings'
+			},
+			bodyDetailsMap: {
+				tattoos: 'with tattoos',
+				piercings: 'with piercings',
+				freckles: 'with freckles',
+				'body-hair': 'with body hair',
+				shaved: 'shaved'
+			},
+			actionMap: {
+				oral_male: 'is sucking the penis of {target}',
+				oral_female: 'is licking the pussy of {target}',
+				oral_deepthroat: 'is deepthroating the penis of {target}',
+				vaginal: 'is having vaginal sex with {target}',
+				anal: 'is having anal sex with {target}',
+				double_penetration: 'is double penetrating {target}',
+				fingering: 'is fingering {target}',
+				handjob: 'is giving a handjob to {target}',
+				footjob: 'is giving a footjob to {target}',
+				mutual_masturbation: 'is engaging in mutual masturbation with {target}',
+				spanking: 'is spanking the ass of {target}',
+				bondage: 'is restraining {target}',
+				feet_worship: 'is worshipping the feet of {target}',
+				stripping: 'is stripping slowly',
+				kissing: 'is kissing {target}'
+			},
+			poseMap: {
+				kneeling: 'kneeling',
+				lying_back: 'lying on back',
+				lying_stomach: 'lying on stomach',
+				sitting_lap: 'sitting on lap',
+				standing: 'standing',
+				missionary: 'missionary position',
+				doggy: 'doggy style',
+				cowgirl: 'cowgirl',
+				reverse_cowgirl: 'reverse cowgirl',
+				spooning: 'spooning',
+				bent_over: 'bent over'
+			},
+			poseCompatibility: {
+				oral_male: ['kneeling', 'lying_back', 'sitting_lap', 'standing'],
+				oral_female: ['kneeling', 'lying_back', 'sitting_lap', 'standing'],
+				oral_deepthroat: ['kneeling', 'sitting_lap', 'standing'],
+				vaginal: ['missionary', 'doggy', 'cowgirl', 'reverse_cowgirl', 'spooning', 'bent_over'],
+				anal: ['doggy', 'bent_over', 'cowgirl', 'reverse_cowgirl'],
+				double_penetration: ['doggy', 'bent_over', 'cowgirl'],
+				fingering: ['lying_back', 'kneeling', 'sitting_lap', 'standing'],
+				handjob: ['sitting_lap', 'standing', 'lying_back'],
+				footjob: ['lying_back', 'standing'],
+				mutual_masturbation: ['standing', 'sitting_lap', 'lying_back'],
+				kissing: ['standing', 'sitting_lap', 'lying_back', 'missionary', 'spooning'],
+				stripping: ['standing', 'sitting_lap'],
+				feet_worship: ['kneeling', 'lying_back', 'sitting_lap'],
+				spanking: ['bent_over', 'standing', 'doggy'],
+				bondage: ['kneeling', 'bent_over', 'standing', 'lying_back']
+			},
+			envMap: {
+				bedroom: 'in a cozy bedroom',
+				bathroom: 'in a modern bathroom',
+				living_room: 'in a spacious living room',
+				office: 'in a professional office',
+				hotel: 'in a luxurious hotel room',
+				kitchen: 'in a clean kitchen',
+				outdoor: 'on a busy city street',
+				beach: 'on a sunny beach',
+				pool: 'by a swimming pool'
+			},
+			lightingMap: {
+				soft: 'soft lighting',
+				dim: 'dim lighting',
+				natural: 'natural lighting',
+				dramatic: 'dramatic lighting'
+			},
+			atmosphereMap: {
+				intimate: 'intimate',
+				sensual: 'sensual',
+				playful: 'playful',
+				passionate: 'passionate'
+			},
+			styleMap: {
+				photorealistic: 'professional DSLR photograph, shot with Canon EOS R5 f/1.8 50mm lens, three-point lighting with warm key light and rim lighting, perfect skin texture with natural pores, 8k ultra HD, sharp focus, film grain aesthetic, professional color grading with warm tones, shallow depth of field with bokeh',
+				realistic: 'high-quality professional photography, mirrorless camera f/2.0 85mm lens, natural soft window lighting with golden hour warmth, detailed skin texture with realistic imperfections, 4k resolution, sharp focus, professional studio lighting, subtle color grading, film-like quality with organic grain, warm and cool color balance',
+				artistic: 'artistic masterpiece oil painting, expressive brushstrokes, dramatic theatrical lighting with strong key light and shadows, vibrant saturated colors with rich highlights and deep blacks, expressive sensual composition, gallery-quality art style, romantic color palette with warm undertones, emotional atmosphere',
+				cinematic: 'cinematic professional film scene, Alexa Mini f/2.4 35mm cinema lens, dramatic three-point lighting with strong contrast, film noir aesthetic, professional cinema color grading, warm and cool color temperature contrast, shallow depth of field with cinematic bokeh, 35mm film stock look, award-winning cinematography'
+			},
+			angleMap: {
+				low: 'shot from low angle',
+				high: 'shot from high angle',
+				eye_level: 'eye level shot'
+			},
+			focusMap: {
+				face: 'focus on face',
+				body: 'full body',
+				interaction: 'focus on interaction'
+			},
+			camEffectMap: {
+				dof: 'shallow depth of field',
+				flare: 'subtle lens flare',
+				blur: 'subtle motion blur',
+				vignette: 'subtle vignette',
+				bokeh: 'soft bokeh'
+			},
+			fovMap: {
+				narrow: 'narrow field of view',
+				normal: 'normal field of view',
+				wide: 'wide field of view'
+			},
+			feetMap: {
+				pointed: 'with pointed toes',
+				flexed: 'with flexed toes',
+				arched: 'with arched feet'
+			},
+			feetTextureMap: {
+				smooth: 'with smooth feet',
+				clean: 'with clean feet',
+				natural: 'with natural skin texture'
+			},
+			nailsShapeMap: {
+				round: 'with round toenails',
+				square: 'with square toenails',
+				almond: 'with almond-shaped toenails'
+			},
+			nailsColorMap: {
+				red: 'red toenails',
+				black: 'black toenails',
+				nude: 'nude toenails',
+				pink: 'pink toenails',
+				white: 'white toenails'
+			},
+			compatibility: {
+				oral_male: ['oral_male', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				oral_female: ['oral_female', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				oral_deepthroat: ['oral_deepthroat', 'kissing', 'spanking', 'bondage', 'stripping'],
+				vaginal: ['vaginal', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				anal: ['anal', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				double_penetration: ['double_penetration', 'kissing', 'spanking', 'bondage', 'stripping'],
+				fingering: ['fingering', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				handjob: ['handjob', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				footjob: ['footjob', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				mutual_masturbation: ['mutual_masturbation', 'kissing', 'spanking', 'bondage', 'stripping'],
+				kissing: ['oral_male', 'oral_female', 'oral_deepthroat', 'vaginal', 'anal', 'double_penetration', 'fingering', 'handjob', 'footjob', 'mutual_masturbation', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				spanking: ['oral_male', 'oral_female', 'oral_deepthroat', 'vaginal', 'anal', 'double_penetration', 'fingering', 'handjob', 'footjob', 'mutual_masturbation', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				bondage: ['oral_male', 'oral_female', 'oral_deepthroat', 'vaginal', 'anal', 'double_penetration', 'fingering', 'handjob', 'footjob', 'mutual_masturbation', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				stripping: ['oral_male', 'oral_female', 'oral_deepthroat', 'vaginal', 'anal', 'double_penetration', 'fingering', 'handjob', 'footjob', 'mutual_masturbation', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship'],
+				feet_worship: ['oral_male', 'oral_female', 'vaginal', 'anal', 'fingering', 'handjob', 'footjob', 'kissing', 'spanking', 'bondage', 'stripping', 'feet_worship']
+			},
+			fluidMap: {
+				cum: {
+					face: 'with cum on her face',
+					lips: 'with cum on her lips',
+					breasts: 'with cum on her breasts',
+					belly: 'with cum on her belly',
+					legs: 'with cum on her legs',
+					genitals: 'with cum on her genitals',
+					penis: 'with cum on his penis'
+				},
+				saliva: {
+					penis: 'with saliva on his penis',
+					chin: 'with saliva on her chin',
+					body: 'with saliva on her body'
+				},
+				sweat: {
+					face: 'with sweat on her face',
+					body: 'covered in sweat',
+					breasts: 'with sweat on her breasts'
+				},
+				lube: {
+					hands: 'with lube on her hands',
+					body: 'with lube on her body'
+				}
+			}
+		};
+
+		const ACTION_CATEGORIES = {
+			oral: {
+				label: 'Oral',
+				actions: {
+					oral_male: 'Sucking Penis',
+					oral_female: 'Licking Pussy',
+					oral_deepthroat: 'Deepthroating'
+				}
+			},
+			penetration: {
+				label: 'Penetration',
+				actions: {
+					vaginal: 'Vaginal Sex',
+					anal: 'Anal Sex',
+					double_penetration: 'Double Penetration',
+					fingering: 'Fingering'
+				}
+			},
+			masturbating: {
+				label: 'Masturbating',
+				actions: {
+					handjob: 'Handjob',
+					footjob: 'Footjob',
+					mutual_masturbation: 'Mutual Masturbation'
+				}
+			},
+			fetishes: {
+				label: 'Fetishes',
+				actions: {
+					spanking: 'Spanking',
+					bondage: 'Bondage',
+					feet_worship: 'Feet Worship',
+					stripping: 'Stripping',
+					kissing: 'Kissing'
+				}
+			}
+		};
+
+		const MODIFIER_CATEGORIES = {
+			touch: {
+				label: 'Touch',
+				modifiers: {
+					touch_lick_body: 'Licking body',
+					touch_caress: 'Caressing',
+					touch_play_nipples: 'Playing nipples',
+					touch_bite: 'Biting',
+					touch_stroke_skin: 'Stroking skin',
+					touch_massage_body: 'Massaging body',
+					touch_kiss_neck: 'Kissing neck',
+					touch_suck_toes: 'Sucking toes'
+				}
+			},
+			sound: {
+				label: 'Sound',
+				modifiers: {
+					sound_whisper: 'Whispering',
+					sound_moan: 'Moaning',
+					sound_dirty_talk: 'Dirty talk',
+					sound_command: 'Commanding'
+				}
+			},
+			bdsm: {
+				label: 'BDSM',
+				modifiers: {
+					bdsm_ice: 'Using ice',
+					bdsm_restrain: 'Restraining',
+					bdsm_discipline: 'Disciplining',
+					bdsm_punish: 'Punishing',
+					bdsm_whip: 'Using whip',
+					bdsm_choke: 'Choking'
+				}
+			},
+			visual: {
+				label: 'Visual',
+				modifiers: {
+					misc_eye_contact: 'Eye contact',
+					misc_smile: 'Seductive smile',
+					misc_breathing: 'Heavy breathing',
+					misc_hair_pull: 'Hair pulling',
+					misc_slow_motion: 'Slow motion'
+				}
+			},
+			public: {
+				label: 'Public',
+				modifiers: {
+					public_risk: 'Risk of being caught',
+					public_exhib: 'Exhibitionism',
+					public_voyeur: 'Being watched'
+				}
+			}
+		};
+
+		const FLUID_LOCATIONS = {
+			cum: ['face', 'lips', 'breasts', 'belly', 'legs', 'genitals', 'penis'],
+			saliva: ['penis', 'chin', 'body'],
+			sweat: ['face', 'body', 'breasts'],
+			lube: ['hands', 'body']
+		};
+
+		const ACTION_MODIFIERS_MAP = {
+			touch_lick_body: 'licking {target}\'s body',
+			touch_caress: 'touching and caressing {target}',
+			touch_play_nipples: 'playing with {target}\'s nipples',
+			touch_bite: 'biting {target}',
+			touch_stroke_skin: 'stroking {target}\'s skin',
+			touch_massage_body: 'massaging {target}\'s body',
+			touch_kiss_neck: 'kissing {target}\'s neck',
+			touch_suck_toes: 'sucking {target}\'s toes',
+			bdsm_ice: 'using ice on {target}\'s skin',
+			bdsm_restrain: 'restraining {target}',
+			bdsm_discipline: 'disciplining {target}',
+			bdsm_punish: 'punishing {target}',
+			bdsm_whip: 'using a whip on {target}',
+			bdsm_choke: 'choking {target}',
+			sound_whisper: 'whispering to {target}',
+			sound_moan: 'moaning loudly',
+			sound_dirty_talk: 'talking dirty',
+			sound_command: 'giving commands to {target}',
+			misc_eye_contact: 'with intense eye contact',
+			misc_smile: 'with a seductive smile',
+			misc_breathing: 'breathing heavily',
+			misc_hair_pull: 'pulling {target}\'s hair',
+			misc_slow_motion: 'moving slowly and sensually',
+			public_risk: 'risk of being caught',
+			public_exhib: 'showing off for others',
+			public_voyeur: 'being watched by others'
+		};
+
+		// ============================================
+		// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+		// ============================================
+		let currentPrompt = '';
+		let isGenerating = false;
+		let generatedImages = [];
+		let selectedActions = [];
+		let selectedModifiers = [];
+		let modalImageIndex = 0;
+		let fluidCounter = { 1: 1, 2: 1 };
+
+		// ============================================
+		// ИНИЦИАЛИЗАЦИЯ
+		// ============================================
+		function initActionsList() {
+			Object.entries(ACTION_CATEGORIES).forEach(([category, catData]) => {
+				const container = document.getElementById(`actions-${category}`);
+				container.innerHTML = '';
+				Object.entries(catData.actions).forEach(([key, label]) => {
+					const div = document.createElement('div');
+					div.className = 'action-item';
+					div.innerHTML = `<input type="checkbox" id="action-${key}" onchange="updateActionsList()"> <label for="action-${key}">${label}</label>`;
+					container.appendChild(div);
+				});
+			});
+		}
+
+		function initModifiersList() {
+			Object.entries(MODIFIER_CATEGORIES).forEach(([category, catData]) => {
+				const container = document.getElementById(`modifiers-${category}`);
+				container.innerHTML = '';
+				Object.entries(catData.modifiers).forEach(([key, label]) => {
+					const div = document.createElement('div');
+					div.className = 'action-item';
+					div.innerHTML = `<input type="checkbox" id="modifier-${key}" onchange="updateSelectedModifiers()"> <label for="modifier-${key}">${label}</label>`;
+					container.appendChild(div);
+				});
+			});
+		}
+
+		// ============================================
+		// ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
+		// ============================================
+		function updateUI() {
+			const fpv = document.getElementById('fpv')?.checked || false;
+			const count = document.getElementById('count')?.value || 'solo';
+
+			const fpvGroup = document.getElementById('fpv-group');
+			const roleGroup = document.getElementById('role-group');
+			const char2Section = document.getElementById('char-2-section');
+			const char2Fluids = document.getElementById('char2-fluids');
+
+			if (fpvGroup) fpvGroup.style.display = fpv ? 'block' : 'none';
+			if (roleGroup) roleGroup.style.display = (count === 'couple' && !fpv) ? 'block' : 'none';
+			if (char2Section) char2Section.style.display = (count === 'couple' && !fpv) ? 'block' : 'none';
+			if (char2Fluids) char2Fluids.style.display = (count === 'couple' && !fpv) ? 'block' : 'none';
+
+			updateGenderDisplay(1);
+			if (count === 'couple') updateGenderDisplay(2);
+			updatePrompt();
+		}
+
+		function updateGenderDisplay(n) {
+			const g = document.getElementById(`gender-${n}`)?.value;
+			const b = document.getElementById(`breast-${n}`);
+			const p = document.getElementById(`penis-${n}`);
+			
+			if (b && p) {
+				if (g === 'woman') {
+					b.style.display = 'block';
+					p.style.display = 'none';
+				} else if (g === 'man') {
+					b.style.display = 'none';
+					p.style.display = 'block';
+				} else if (g === 'shemale') {
+					b.style.display = 'block';
+					p.style.display = 'block';
+				} else {
+					b.style.display = 'none';
+					p.style.display = 'none';
+				}
+			}
+		}
+
+		// ============================================
+		// ФУНКЦИИ ДЛЯ ВОЗРАСТА (ИСПРАВЛЕНЫ)
+		// ============================================
+		function getAge(ageId) {
+			const range = DATA.ageMap[ageId];
+			if (range) return Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0];
+			return '';
+		}
+
+		function getAgeWord(ageId) {
+			const range = DATA.ageMap[ageId];
+			if (!range) return '';
+			const age = Math.floor(Math.random() * (range[1] - range[0] + 1)) + range[0];
+			if (age < 22) return 'young';
+			if (age < 28) return 'mid-twenties';
+			if (age < 35) return 'late twenties';
+			if (age < 40) return 'early thirties';
+			if (age < 50) return 'mature';
+			return 'older';
+		}
+
+		// ============================================
+		// FLUIDS ФУНКЦИИ
+		// ============================================
+		function addFluidRow(charNum) {
+			fluidCounter[charNum] = (fluidCounter[charNum] || 0) + 1;
+			const idx = fluidCounter[charNum];
+			const container = document.getElementById(`fluids-char${charNum}`);
+
+			const row = document.createElement('div');
+			row.id = `fluid-row-${charNum}-${idx}`;
+			row.style.cssText = 'display:flex; gap:4px; margin-bottom:6px; align-items:center;';
+			row.innerHTML = `
+			<select id="fluid-type-${charNum}-${idx}" onchange="updateFluidOptions(${charNum}, ${idx})" style="flex:1;">
+			<option value="">Type</option>
+			<option value="cum">Cum</option>
+			<option value="saliva">Saliva</option>
+			<option value="sweat">Sweat</option>
+			<option value="lube">Lube</option>
+			</select>
+			<select id="fluid-place-${charNum}-${idx}" onchange="updatePrompt()" style="flex:1;">
+			<option value="">Location</option>
+			</select>
+			<button onclick="removeFluidRow(${charNum}, ${idx})" style="padding:4px 8px; font-size:0.65rem;">Remove</button>
+			`;
+			if (container) container.appendChild(row);
+		}
+
+		function removeFluidRow(charNum, idx) {
+			const row = document.getElementById(`fluid-row-${charNum}-${idx}`);
+			if (row) row.remove();
+			updatePrompt();
+		}
+
+		function updateFluidOptions(charNum, idx) {
+			const fluidType = document.getElementById(`fluid-type-${charNum}-${idx}`)?.value;
+			const placeSelect = document.getElementById(`fluid-place-${charNum}-${idx}`);
+			if (!placeSelect) return;
+
+			placeSelect.innerHTML = '<option value="">Location</option>';
+			if (fluidType && FLUID_LOCATIONS[fluidType]) {
+				FLUID_LOCATIONS[fluidType].forEach(loc => {
+					const opt = document.createElement('option');
+					opt.value = loc;
+					opt.textContent = loc.charAt(0).toUpperCase() + loc.slice(1);
+					placeSelect.appendChild(opt);
+				});
+			}
+			updatePrompt();
+		}
+
+		// ============================================
+		// ДЕЙСТВИЯ И МОДИФИКАТОРЫ
+		// ============================================
+		function updateActionsList() {
+			selectedActions = [];
+			for (const category of Object.keys(ACTION_CATEGORIES)) {
+				for (const action of Object.keys(ACTION_CATEGORIES[category].actions)) {
+					const checkbox = document.getElementById(`action-${action}`);
+					if (checkbox?.checked) {
+						selectedActions.push(action);
+					}
+				}
+			}
+			disableIncompatibleActions();
+			updatePoseOptions();
+			updatePrompt();
+		}
+
+		function disableIncompatibleActions() {
+			// Сначала активируем все
+			for (const category of Object.keys(ACTION_CATEGORIES)) {
+				for (const action of Object.keys(ACTION_CATEGORIES[category].actions)) {
+					const checkbox = document.getElementById(`action-${action}`);
+					if (checkbox) checkbox.disabled = false;
+				}
+			}
+
+			if (selectedActions.length === 0) return;
+
+			// Находим совместимые действия
+			let compatible = null;
+			selectedActions.forEach(action => {
+				if (DATA.compatibility[action]) {
+					const actionCompat = new Set(DATA.compatibility[action]);
+					if (compatible === null) {
+						compatible = actionCompat;
+					} else {
+						compatible = new Set([...compatible].filter(x => actionCompat.has(x)));
+					}
+				}
+			});
+
+			if (!compatible) return;
+
+			// Отключаем несовместимые
+			for (const category of Object.keys(ACTION_CATEGORIES)) {
+				for (const action of Object.keys(ACTION_CATEGORIES[category].actions)) {
+					const checkbox = document.getElementById(`action-${action}`);
+					const isSelected = selectedActions.includes(action);
+					if (checkbox && !compatible.has(action) && !isSelected) {
+						checkbox.disabled = true;
+					}
+				}
+			}
+		}
+
+		function updateSelectedModifiers() {
+			selectedModifiers = [];
+			for (const category of Object.keys(MODIFIER_CATEGORIES)) {
+				for (const modifier of Object.keys(MODIFIER_CATEGORIES[category].modifiers)) {
+					if (document.getElementById(`modifier-${modifier}`)?.checked) {
+						selectedModifiers.push(modifier);
+					}
+				}
+			}
+			updatePrompt();
+		}
+
+		// ============================================
+		// ПОЗЫ
+		// ============================================
+		function updatePoseOptions() {
+			const poseSelect = document.getElementById('pose');
+			if (!poseSelect) return;
+			
+			if (selectedActions.length === 0) {
+				for (let i = 0; i < poseSelect.options.length; i++) {
+					poseSelect.options[i].disabled = false;
+					poseSelect.options[i].style.opacity = '1';
+				}
+				return;
+			}
+
+			let compatiblePoses = null;
+			selectedActions.forEach(action => {
+				const actionPoses = DATA.poseCompatibility[action];
+				if (actionPoses) {
+					const actionPosesSet = new Set(actionPoses);
+					if (compatiblePoses === null) {
+						compatiblePoses = actionPosesSet;
+					} else {
+						compatiblePoses = new Set([...compatiblePoses].filter(x => actionPosesSet.has(x)));
+					}
+				}
+			});
+
+			if (!compatiblePoses || compatiblePoses.size === 0) {
+				for (let i = 0; i < poseSelect.options.length; i++) {
+					poseSelect.options[i].disabled = false;
+					poseSelect.options[i].style.opacity = '1';
+				}
+				return;
+			}
+
+			for (let i = 0; i < poseSelect.options.length; i++) {
+				const value = poseSelect.options[i].value;
+				if (!value) continue;
+				
+				const isCompatible = compatiblePoses.has(value);
+				poseSelect.options[i].disabled = !isCompatible;
+				poseSelect.options[i].style.opacity = isCompatible ? '1' : '0.4';
+			}
+
+			if (poseSelect.value && !compatiblePoses.has(poseSelect.value)) {
+				poseSelect.value = '';
+				updatePrompt();
+			}
+		}
+
+		// ============================================
+		// ФУНКЦИИ ДЛЯ ХАРАКТЕРИСТИК ПЕРСОНАЖЕЙ
+		// ============================================
+		function getCharFluid(charNum) {
+			let fluidText = '';
+			for (let i = 1; i <= (fluidCounter[charNum] || 1); i++) {
+				const fluidType = document.getElementById(`fluid-type-${charNum}-${i}`)?.value;
+				const fluidPlace = document.getElementById(`fluid-place-${charNum}-${i}`)?.value;
+				if (fluidType && fluidPlace && DATA.fluidMap[fluidType] && DATA.fluidMap[fluidType][fluidPlace]) {
+					fluidText += `, ${DATA.fluidMap[fluidType][fluidPlace]}`;
+				}
+			}
+			return fluidText;
+		}
+
+		// ИСПРАВЛЕНО: Добавлена недостающая функция
+		function getPassiveCharDescriptionFPV() {
+			// Для FPV режима, когда viewer активен, а char1 пассивен
+			const g1 = document.getElementById('gender-1')?.value;
+			const age1Word = getAgeWord(document.getElementById('age-1')?.value);
+			const body1 = document.getElementById('body-1')?.value;
+			const breast1 = document.getElementById('breast-1')?.value;
+			const penis1 = document.getElementById('penis-1')?.value;
+			const clothing1 = document.getElementById('clothing-1')?.value;
+			const expr1 = document.getElementById('expression-1')?.value;
+
+			let charDesc = '';
+			if (age1Word) charDesc += age1Word + ' ';
+			if (body1 && DATA.bodyMap[body1]) charDesc += DATA.bodyMap[body1] + ' ';
+			if (g1 && DATA.genderMap[g1]) {
+				charDesc += DATA.genderMap[g1].replace('a ', '').replace('an ', '');
+			}
+			if (breast1 && DATA.breastMap[breast1]) charDesc += ` with ${DATA.breastMap[breast1]}`;
+			if (g1 === 'shemale' && penis1 && DATA.penisMap[penis1]) charDesc += ` and ${DATA.penisMap[penis1]}`;
+			if (clothing1 && DATA.clothingMap[clothing1]) charDesc += `, ${DATA.clothingMap[clothing1]}`;
+			if (expr1 && DATA.expressionMap[expr1]) charDesc += `, ${DATA.expressionMap[expr1]}`;
+
+			return charDesc;
+		}
+
+		function getPassiveCharDescription() {
+			const g2 = document.getElementById('gender-2')?.value;
+			const age2Word = getAgeWord(document.getElementById('age-2')?.value);
+			const body2 = document.getElementById('body-2')?.value;
+			const breast2 = document.getElementById('breast-2')?.value;
+			const penis2 = document.getElementById('penis-2')?.value;
+			const clothing2 = document.getElementById('clothing-2')?.value;
+			const expr2 = document.getElementById('expression-2')?.value;
+
+			let charDesc = '';
+			if (age2Word) charDesc += age2Word + ' ';
+			if (body2 && DATA.bodyMap[body2]) charDesc += DATA.bodyMap[body2] + ' ';
+			if (g2 && DATA.genderMap[g2]) {
+				charDesc += DATA.genderMap[g2].replace('a ', '').replace('an ', '');
+			}
+			if (breast2 && DATA.breastMap[breast2]) charDesc += ` with ${DATA.breastMap[breast2]}`;
+			if (g2 === 'shemale' && penis2 && DATA.penisMap[penis2]) charDesc += ` and ${DATA.penisMap[penis2]}`;
+			if (clothing2 && DATA.clothingMap[clothing2]) charDesc += `, ${DATA.clothingMap[clothing2]}`;
+			if (expr2 && DATA.expressionMap[expr2]) charDesc += `, ${DATA.expressionMap[expr2]}`;
+
+			return charDesc;
+		}
+
+		function getActiveCharDescriptionFPV() {
+			return getPassiveCharDescription(); // В FPV активный - это char2
+		}
+
+		// ============================================
+		// ПОСТРОЕНИЕ ПРОМПТА
+		// ============================================
+		function buildPrompt() {
+			let p = '';
+			const fpv = document.getElementById('fpv')?.checked || false;
+			const count = document.getElementById('count')?.value || 'solo';
+			
+			// Получаем правильный активный персонаж
+			let activeRole = 'char1';
+			if (fpv) {
+				activeRole = document.getElementById('fpv-active-char')?.value || 'viewer';
+			} else if (count === 'couple') {
+				activeRole = document.getElementById('couple-active-char')?.value || 'char1';
+			}
+			
+			const env = document.getElementById('environment')?.value;
+			const light = document.getElementById('lighting')?.value;
+			const atm = document.getElementById('atmosphere')?.value;
+
+			// СЦЕНА
+			if (env && DATA.envMap[env]) {
+				p += DATA.envMap[env];
+				if (light && DATA.lightingMap[light]) p += ` with ${DATA.lightingMap[light]}`;
+				if (atm && DATA.atmosphereMap[atm]) p += `, ${DATA.atmosphereMap[atm]} atmosphere`;
+				p += '. ';
+			}
+
+			// ПЕРСОНАЖ 1 или FPV
+			const g1 = document.getElementById('gender-1')?.value;
+			const fpvGender = document.getElementById('fpv-gender')?.value || 'man';
+			
+			if (fpv) {
+				p += `From viewer's perspective of ${DATA.genderMap[fpvGender].replace('a ', '').toUpperCase()}. `;
+			} else {
+				// Обычный режим
+				const age1Word = getAgeWord(document.getElementById('age-1')?.value);
+				const body1 = document.getElementById('body-1')?.value;
+				const breast1 = document.getElementById('breast-1')?.value;
+				const penis1 = document.getElementById('penis-1')?.value;
+				const clothing1 = document.getElementById('clothing-1')?.value;
+				const expr1 = document.getElementById('expression-1')?.value;
+
+				let char1Desc = '';
+				if (age1Word) char1Desc += age1Word + ' ';
+				if (body1 && DATA.bodyMap[body1]) char1Desc += DATA.bodyMap[body1] + ' ';
+				if (g1 && DATA.genderMap[g1]) {
+					char1Desc += DATA.genderMap[g1].replace('a ', '').replace('an ', '');
+				}
+				if (breast1 && DATA.breastMap[breast1]) char1Desc += ` with ${DATA.breastMap[breast1]}`;
+				if (g1 === 'shemale' && penis1 && DATA.penisMap[penis1]) char1Desc += ` and ${DATA.penisMap[penis1]}`;
+				if (clothing1 && DATA.clothingMap[clothing1]) char1Desc += `, ${DATA.clothingMap[clothing1]}`;
+				if (expr1 && DATA.expressionMap[expr1]) char1Desc += `, ${DATA.expressionMap[expr1]}`;
+
+				// Флюиды для активного персонажа
+				let fluid1Text = getCharFluid(1);
+				char1Desc += fluid1Text;
+
+				p += char1Desc + '. ';
+			}
+
+			// ДЕЙСТВИЯ
+			let actionLine = '';
+			let actionTexts = [];
+			
+			selectedActions.forEach(action => {
+				let text = DATA.actionMap[action];
+				if (text) actionTexts.push(text);
+			});
+
+			if (actionTexts.length > 0) {
+				if (fpv) {
+					// FPV режим
+					if (activeRole === 'viewer') {
+						// Viewer активен
+						actionLine = 'Viewer ' + actionTexts.join(', ');
+						
+						if (count === 'solo') {
+							// FPV Solo
+							const reflexive = DATA.reflexiveMap[fpvGender] || 'himself';
+							actionLine = actionLine.replace(/{target}/g, reflexive);
+						} else if (count === 'couple') {
+							// FPV Couple
+							const passiveCharDesc = getPassiveCharDescriptionFPV();
+							actionLine = actionLine.replace(/{target}/g, passiveCharDesc);
+						}
+					} else {
+						// Viewer пассивен
+						const activeCharDesc = getActiveCharDescriptionFPV();
+						actionLine = activeCharDesc + ' ' + actionTexts.join(', ');
+						actionLine = actionLine.replace(/{target}/g, 'viewer');
+						
+						// Флюиды для viewer
+						let fluidViewer = getCharFluid(1);
+						actionLine += fluidViewer;
+					}
+				} else if (count === 'solo') {
+					// Solo без FPV
+					const pronoun = DATA.pronounMap[g1]?.subject || 'She';
+					actionLine = pronoun + ' ' + actionTexts.join(', ');
+					const reflexive = DATA.reflexiveMap[g1] || 'herself';
+					actionLine = actionLine.replace(/{target}/g, reflexive);
+					
+					let fluidSolo = getCharFluid(1);
+					actionLine += fluidSolo;
+				} else if (count === 'couple') {
+					// Couple без FPV
+					const pronoun = DATA.pronounMap[g1]?.subject || 'She';
+					actionLine = pronoun + ' ' + actionTexts.join(', ');
+					const passiveCharDesc = getPassiveCharDescription();
+					actionLine = actionLine.replace(/{target}/g, passiveCharDesc);
+					
+					let fluidPassive = getCharFluid(2);
+					actionLine += fluidPassive;
+				}
+
+				// Поза
+				const pose = document.getElementById('pose')?.value;
+				if (pose && DATA.poseMap[pose]) {
+					actionLine += `, in ${DATA.poseMap[pose]}`;
+				}
+
+				actionLine += '. ';
+				p += actionLine;
+			}
+
+			// СОВМЕСТНЫЕ ДЕЙСТВИЯ (только для пары)
+			if (count === 'couple' && selectedModifiers.length > 0) {
+				let modTexts = selectedModifiers.map(mod => {
+					let text = ACTION_MODIFIERS_MAP[mod];
+					if (text) {
+						return text.replace(/{target}/g, 'each other');
+					}
+					return '';
+				}).filter(t => t);
+
+				modTexts = [...new Set(modTexts)];
+
+				if (modTexts.length > 0) {
+					p += `They are ${modTexts.join(', ')}. `;
+				}
+			}
+
+			// ДЕТАЛИ НОГ
+			const g2 = document.getElementById('gender-2')?.value;
+			const hasWomanOrShemale = g1 === 'woman' || g1 === 'shemale' || 
+									   (count === 'couple' && (g2 === 'woman' || g2 === 'shemale')) ||
+									   (fpv && (fpvGender === 'woman' || fpvGender === 'shemale'));
+
+			const hasFeetDetails = document.getElementById('feet-posture')?.value || 
+									document.getElementById('feet-texture')?.value ||
+									document.getElementById('nails-shape')?.value ||
+									document.getElementById('nails-color')?.value;
+
+			if (hasWomanOrShemale && hasFeetDetails) {
+				const feetP = document.getElementById('feet-posture')?.value;
+				const feetT = document.getElementById('feet-texture')?.value;
+				const nailsS = document.getElementById('nails-shape')?.value;
+				const nailsC = document.getElementById('nails-color')?.value;
+
+				let feetDesc = 'Her feet are ';
+				let feetDetails = [];
+				if (feetP && DATA.feetMap[feetP]) feetDetails.push(DATA.feetMap[feetP].replace('with ', ''));
+				if (feetT && DATA.feetTextureMap[feetT]) feetDetails.push(DATA.feetTextureMap[feetT].replace('with ', ''));
+				if (nailsS && DATA.nailsShapeMap[nailsS]) feetDetails.push(DATA.nailsShapeMap[nailsS].replace('with ', ''));
+				if (nailsC && DATA.nailsColorMap[nailsC]) feetDetails.push(`${DATA.nailsColorMap[nailsC]}`);
+
+				feetDesc += feetDetails.join(', ') + '. ';
+				p += feetDesc;
+			}
+
+			// СТИЛЬ И КАМЕРА
+			const style = document.getElementById('style')?.value || 'photorealistic';
+			p += `${DATA.styleMap[style]}`;
+			
+			const angle = document.getElementById('angle')?.value;
+			if (angle && DATA.angleMap[angle]) p += `, ${DATA.angleMap[angle]}`;
+			
+			const focus = document.getElementById('focus')?.value;
+			if (focus && DATA.focusMap[focus]) p += `, ${DATA.focusMap[focus]}`;
+			
+			const camEff = document.getElementById('cam-effect')?.value;
+			if (camEff && DATA.camEffectMap[camEff]) p += `, ${DATA.camEffectMap[camEff]}`;
+			
+			const fov = document.getElementById('fov')?.value;
+			if (fov && DATA.fovMap[fov]) p += `, ${DATA.fovMap[fov]}`;
+
+			p += '. ';
+
+			// КАЧЕСТВО
+			p += 'Masterpiece, award-winning quality. Anatomically correct proportions, realistic muscle definition. Flawless skin with natural imperfections, perfect facial symmetry. No distortions, no artifacts, no extra limbs, five fingers and toes on each limb, two arms and legs. Professional composition, perfect lighting and clarity.';
+
+			return p;
+		}
+
+		// ============================================
+		// ОБНОВЛЕНИЕ ПРОМПТА
+		// ============================================
+		function updatePrompt() {
+			currentPrompt = buildPrompt();
+			const promptEdit = document.getElementById('prompt-edit');
+			const advanced = document.getElementById('advanced');
+			if (promptEdit && advanced && advanced.checked) {
+				promptEdit.value = currentPrompt;
+			}
+		}
+
+		// ============================================
+		// ADVANCED EDITING
+		// ============================================
+		function toggleAdvanced() {
+			const checked = document.getElementById('advanced').checked;
+			const promptEdit = document.getElementById('prompt-edit');
+			const resetBtn = document.getElementById('reset-btn');
+			const improveBtn = document.getElementById('improve-btn');
+
+			if (promptEdit) promptEdit.style.display = checked ? 'block' : 'none';
+			if (resetBtn) resetBtn.style.display = checked ? 'block' : 'none';
+			if (improveBtn) improveBtn.style.display = checked ? 'block' : 'none';
+
+			if (checked && promptEdit) {
+				promptEdit.value = currentPrompt;
+			}
+		}
+
+		function resetPrompt() {
+			const promptEdit = document.getElementById('prompt-edit');
+			updatePrompt();
+			if (promptEdit) promptEdit.value = currentPrompt;
+		}
+
+		// ============================================
+		// AI REMASTER
+		// ============================================
+		async function improvePrompt() {
+			const promptEdit = document.getElementById('prompt-edit');
+			if (!promptEdit?.value) {
+				alert('Prompt is empty');
+				return;
+			}
+
+			const btn = document.getElementById('improve-btn');
+			if (!btn) return;
+			
+			btn.disabled = true;
+			btn.textContent = 'AI working...';
+
+			try {
+				const fullPrompt = promptEdit.value;
+				const qualityBoilerplateStart = fullPrompt.indexOf('Masterpiece, award-winning quality');
+				let mainPrompt = fullPrompt;
+				let qualityBoilerplate = '';
+
+				if (qualityBoilerplateStart !== -1) {
+					mainPrompt = fullPrompt.substring(0, qualityBoilerplateStart).trim();
+					qualityBoilerplate = fullPrompt.substring(qualityBoilerplateStart);
+				}
+
+				// Защищенные ключевые слова
+				const protectedKeywords = [];
+				const fpv = document.getElementById('fpv')?.checked;
+				if (fpv) protectedKeywords.push('viewer');
+				
+				selectedActions.forEach(action => {
+					const actionText = DATA.actionMap[action];
+					if (actionText) {
+						const match = actionText.match(/is\s+(\w+(?:\s+\w+)*)\s+/);
+						if (match) protectedKeywords.push(match[1]);
+					}
+				});
+
+				const g1 = document.getElementById('gender-1')?.value;
+				const age1 = document.getElementById('age-1')?.value;
+				const body1 = document.getElementById('body-1')?.value;
+				const breast1 = document.getElementById('breast-1')?.value;
+				const penis1 = document.getElementById('penis-1')?.value;
+				
+				if (g1) protectedKeywords.push(DATA.genderMap[g1]);
+				if (age1) {
+					const ageRange = DATA.ageMap[age1];
+					if (ageRange) protectedKeywords.push(`${ageRange[0]}-${ageRange[1]}`);
+				}
+				if (body1 && DATA.bodyMap[body1]) protectedKeywords.push(DATA.bodyMap[body1]);
+				if (breast1 && DATA.breastMap[breast1]) protectedKeywords.push(DATA.breastMap[breast1]);
+				if (g1 === 'shemale' && penis1 && DATA.penisMap[penis1]) protectedKeywords.push(DATA.penisMap[penis1]);
+
+				const protectedList = [...new Set(protectedKeywords)].join(', ');
+
+				const result = await ai({
+					instruction: `Enhance this NSFW prompt while STRICTLY preserving: ${protectedList}. Preserve 4-sentence structure, all character details, sexual actions, viewer perspective. Add sensory details, emotions, visceral movements. NO character names. NO environment changes. Return ONLY enhanced main text, under 400 words. NO quality boilerplate section.`
+				});
+
+				let enhancedText = '';
+				if (result && result.generatedText) {
+					enhancedText = result.generatedText;
+				} else if (result && result.text) {
+					enhancedText = result.text;
+				}
+
+				// Убираем boilerplate если он есть
+				const boilerplateIndex = enhancedText.indexOf('Masterpiece');
+				if (boilerplateIndex !== -1) {
+					enhancedText = enhancedText.substring(0, boilerplateIndex).trim();
+				}
+
+				// Собираем финальный промпт
+				const finalPrompt = enhancedText + '. ' + qualityBoilerplate;
+				promptEdit.value = finalPrompt;
+				currentPrompt = finalPrompt;
+			} catch(e) {
+				console.error('AI error:', e);
+				alert('AI error: ' + e.message);
+			} finally {
+				btn.disabled = false;
+				btn.textContent = 'AI Remaster';
+			}
+		}
+
+		// ============================================
+		// ТЕХНИЧЕСКИЕ ФУНКЦИИ
+		// ============================================
+		function updateGuidance() {
+			const val = document.getElementById('guidance')?.value;
+			const display = document.getElementById('guidance-val');
+			if (display && val) display.textContent = val;
+		}
+
+		function updateBatch() {
+			const val = document.getElementById('batch')?.value;
+			const display = document.getElementById('batch-val');
+			if (display && val) display.textContent = val;
+		}
+
+		// ============================================
+		// ГЕНЕРАЦИЯ ИЗОБРАЖЕНИЙ
+		// ============================================
+		async function generateImage() {
+			if (isGenerating) return;
+			isGenerating = true;
+			const btn = document.getElementById('gen-btn');
+			if (!btn) return;
+			
+			btn.disabled = true;
+			btn.textContent = 'Generating...';
+
+			try {
+				const prompt = document.getElementById('advanced')?.checked ? 
+					(document.getElementById('prompt-edit')?.value || '') : 
+					currentPrompt;
+					
+				const res = document.getElementById('resolution')?.value || '768x768';
+				const guidance = parseFloat(document.getElementById('guidance')?.value || '7');
+				const batch = parseInt(document.getElementById('batch')?.value || '1');
+				let seed = document.getElementById('seed')?.value;
+				const negPrompt = document.getElementById('negativePrompt')?.value || 'ugly, deformed, bad anatomy';
+
+				for (let i = 0; i < batch; i++) {
+					const s = seed ? parseInt(seed) : -1;
+					try {
+						const result = await t2i({
+							prompt: prompt,
+							negativePrompt: negPrompt,
+							resolution: res,
+							guidanceScale: guidance,
+							seed: s
+						});
+
+						if (result) {
+							let imgUrl = result.dataUrl || result.toString();
+							let usedSeed = (result.inputs && result.inputs.seed) ? result.inputs.seed : s;
+							addToGallery(imgUrl, prompt, usedSeed);
+						}
+					} catch(e) {
+						console.error('t2i error:', e);
+					}
+				}
+			} catch(e) {
+				console.error('Generation error:', e);
+				alert('Error: ' + e.message);
+			} finally {
+				isGenerating = false;
+				btn.disabled = false;
+				btn.textContent = 'ECSTASY';
+			}
+		}
+
+		// ============================================
+		// ГАЛЕРЕЯ
+		// ============================================
+		function addToGallery(imgUrl, prompt, seed) {
+			const gallery = document.getElementById('gallery');
+			if (!gallery) return;
+			
+			if (gallery.querySelector('.empty-state')) gallery.innerHTML = '';
+			
+			generatedImages.unshift({
+				img: imgUrl,
+				prompt: prompt,
+				seed: seed
+			});
+			
+			const item = document.createElement('div');
+			item.className = 'gallery-item';
+			const img = document.createElement('img');
+			img.src = imgUrl;
+			img.onclick = () => openModal(0);
+			const btn = document.createElement('button');
+			btn.className = 'gallery-btn';
+			btn.textContent = 'Refresh';
+			btn.onclick = (e) => {
+				e.stopPropagation();
+				// TODO: Реализовать refresh
+			};
+			item.appendChild(img);
+			item.appendChild(btn);
+			gallery.insertBefore(item, gallery.firstChild);
+		}
+
+		// ============================================
+		// МОДАЛЬНОЕ ОКНО
+		// ============================================
+		function openModal(index) {
+			if (index < 0 || index >= generatedImages.length) return;
+			modalImageIndex = index;
+			updateModalDisplay();
+			document.getElementById('modal').classList.add('active');
+		}
+
+		function updateModalDisplay() {
+			const data = generatedImages[modalImageIndex];
+			const modalImg = document.getElementById('modal-img');
+			const modalPrompt = document.getElementById('modal-prompt');
+			const modalInfo = document.getElementById('modal-info');
+			const modalCounter = document.getElementById('modal-counter');
+			
+			if (modalImg) modalImg.src = data.img;
+			if (modalPrompt) modalPrompt.textContent = data.prompt;
+			if (modalInfo) modalInfo.innerHTML = `<strong>Seed:</strong> ${data.seed || 'Random'}`;
+			if (modalCounter) modalCounter.textContent = `${modalImageIndex + 1}/${generatedImages.length}`;
+			
+			window.currentPrompt = data.prompt;
+			window.currentImage = data.img;
+		}
+
+		function nextImage() {
+			if (modalImageIndex < generatedImages.length - 1) {
+				modalImageIndex++;
+				updateModalDisplay();
+			}
+		}
+
+		function prevImage() {
+			if (modalImageIndex > 0) {
+				modalImageIndex--;
+				updateModalDisplay();
+			}
+		}
+
+		function closeModal() {
+			document.getElementById('modal').classList.remove('active');
+		}
+
+		function copyPrompt() {
+			if (window.currentPrompt) {
+				navigator.clipboard.writeText(window.currentPrompt).then(() => alert('Copied!'));
+			}
+		}
+
+		function downloadImg() {
+			if (window.currentImage) {
+				const a = document.createElement('a');
+				a.href = window.currentImage;
+				a.download = 'veloria.png';
+				a.click();
+			}
+		}
+
+		// ============================================
+		// FULLSCREEN
+		// ============================================
+		function toggleFullscreenCustom() {
+			const html = document.documentElement;
+			if (!document.fullscreenElement) {
+				if (html.requestFullscreen) {
+					html.requestFullscreen();
+				} else if (html.webkitRequestFullscreen) {
+					html.webkitRequestFullscreen();
+				}
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.webkitExitFullscreen) {
+					document.webkitExitFullscreen();
+				}
+			}
+		}
+
+		// ============================================
+		// ИНИЦИАЛИЗАЦИЯ
+		// ============================================
+		document.addEventListener('DOMContentLoaded', function() {
+			// Аккордеоны
+			document.querySelectorAll('.accordion-header').forEach(h => {
+				h.addEventListener('click', function() {
+					const c = this.nextElementSibling;
+					this.classList.toggle('active');
+					if (c) c.classList.toggle('active');
+				});
+			});
+
+			// Инициализация
+			initActionsList();
+			initModifiersList();
+			addFluidRow(1);
+			
+			// Проверяем режим для char2
+			const count = document.getElementById('count')?.value;
+			if (count === 'couple') {
+				addFluidRow(2);
+			}
+
+			// Инициализация UI
+			updateUI();
+			updateGuidance();
+			updateBatch();
+			updatePrompt();
+		});
+
+		// ============================================
+		// КЛАВИАТУРНЫЕ СОКРАЩЕНИЯ
+		// ============================================
+		document.addEventListener('keydown', function(e) {
+			if (!document.getElementById('modal')?.classList.contains('active')) return;
+			if (e.key === 'ArrowRight') nextImage();
+			if (e.key === 'ArrowLeft') prevImage();
+		});
+	</script>
+</body>
+</html>
